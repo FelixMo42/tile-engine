@@ -1,0 +1,7 @@
+skill = require "classes/skill"
+ability = require "classes/ability"
+item = require "classes/item"
+object = require "classes/object"
+tile = require "classes/tile"
+map = require "classes/map"
+player = require "classes/player"
