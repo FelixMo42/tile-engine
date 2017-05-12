@@ -40,7 +40,7 @@ function tab:dofunc(f,...)
 				if item.dofunc then
 					item:dofunc(f,...)
 				elseif type(item[f]) == "function" then
-					item[f](f)
+					item[f](item,...)
 					print(f)
 				end
 			end

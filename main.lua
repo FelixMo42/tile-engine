@@ -2,7 +2,7 @@ require "system"
 require "classes"
 require "apps"
 
-window = {
+screen = {
 	width = love.graphics.getWidth(),
 	height = love.graphics.getHeight()
 }
@@ -59,8 +59,8 @@ function love.textinput(...)
 end
 
 function love.resize(w,h,...)
-	window.width = w
-	window.height = h
+	screen.width = w
+	screen.height = h
 	tab:dofunc("resize",w,h,...)
 end
 

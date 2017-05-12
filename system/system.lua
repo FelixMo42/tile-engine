@@ -58,3 +58,9 @@ function rawset(table,key,value)
 	local meta = rawgetmetatable(table)
     return (meta and meta.__rawset or defrawset)(table,key,value)
 end
+
+--math
+
+math.clamp = function(val,min,max)
+	return math.min( math.max(val + 0,min + 0) , max + 0)
+end
