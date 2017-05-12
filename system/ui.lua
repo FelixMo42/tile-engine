@@ -1,6 +1,6 @@
 local ui = class:new({
 	type = "ui",
-	child = {},
+	child = {active = truen},
 	modes = {}
 })
 
@@ -22,11 +22,15 @@ function ui:dofunc(f,...)
 			end
 		end
 	end
-	for i , child in pairs(self.child) do
-		if item.dofunc then
-			item:dofunc(f,...)
-		else
-			call(child,f,...)
+	if self.child.active then
+		for i , child in ipairs(self.child) do
+			if rawtype(child) == "table" then
+				if child.dofunc then
+					child:dofunc(f,...)
+				else
+					call(child,f,...)
+				end
+			end
 		end
 	end
 	call(self,f,...)
@@ -35,7 +39,7 @@ end
 function ui:addChild(c,i,n)
 	c = c or button:new()
 	if type(i) == "string" then
-		child[i] = c
+		self.child[i] = c
 		i = n
 	end
 	i = i or #self.child + 1
@@ -59,6 +63,28 @@ function ui:calc(val,...)
 		return val(...)
 	end
 	return val
+end
+
+function ui.child:is(var)
+	local is = false
+	for k , item in pairs(self) do
+		if rawtype(item) == "table" then
+			if item[var] then
+				is = item[var] or is
+			end
+		end
+	end
+	return is
+end
+
+function ui.child:get(var)
+	local vars = {}
+	for k , item in pairs(self) do
+		if item[var] then
+			vars[#vars + 1] = item[var]
+		end
+	end
+	return unpack(vars)
 end
 
 package.preload["ui"] = function() return ui end

@@ -2,17 +2,21 @@ local tab = require("class"):new({
 	layer = {}
 })
 
-local function add(self,item,i)
+local function add(self,item,i,name)
+	if type(i) == "string" then
+		self[i] = item
+		i = name
+	elseif name then
+		self[name] = item
+	end
 	i = i or #self + 1
 	table.insert(self,i,item)
 end
 
 function tab:addLayer(name , i)
-	if i == "top" then return self:addLayer(name) end
-	if i == "bottom" then return self:addLayer(name,#self.layer + 1) end
 	self.layer[name] = {add = add}
 	_G[self.name][name] = self.layer[name]
-	i = i or 1
+	i = i or #self.layer  + 1
 	table.insert(self.layer,i,self.layer[name])
 end
 

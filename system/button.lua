@@ -8,7 +8,7 @@ local button = require("ui"):new({
 	getmode = "norm",
 	over = false,
 	pressed = false,
-	b = 2,
+	b = 0,
 	b_over = 4,
 	modes = {
 		"pressed",
@@ -27,6 +27,7 @@ button:addCallback("draw","outline",function(self)
 end )
 
 button:addCallback("draw","text",function(self)
+	local text = self.text or self.text_def
 	love.graphics.setColor(self.textColor)
 	local l = #( ( {love.graphics.getFont():getWrap(self.text,self.width)} )[2] )
 	local y = self.y + self.height / 2 -  (l * love.graphics.getFont():getHeight())/2
@@ -55,7 +56,7 @@ button:addCallback("mousemoved","over",function(self,x,y)
 	end
 end )
 
-mt = getmetatable(button)
+local mt = getmetatable(button)
 
 mt.__index = function(self,key)
 	local mt = getmetatable(self)
@@ -108,6 +109,6 @@ mt.__getter.height = function(self)
 	return rawget(self,"height") + (self.bd or self.bh or self.b) + (self.bu or 0)
 end
 
-package.preload["button"] = function(x,y) return button end
+package.preload["button"] = function() return button end
 
 return button

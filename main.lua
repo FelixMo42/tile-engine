@@ -2,6 +2,22 @@ require "system"
 require "classes"
 require "apps"
 
+window = {
+	width = love.graphics.getWidth(),
+	height = love.graphics.getHeight()
+}
+
+function love.open(t,...)
+	tab:dofunc("close",...)
+	if type(t) == "tab" then
+		tab = t
+		tab:dofunc("open",...)
+	else
+		tab = tabs[t]
+		tab:dofunc("open",...)
+	end
+end
+
 function love.draw(...)
 	tab:dofunc("draw",...)
 end
@@ -42,8 +58,10 @@ function love.textinput(...)
 	tab:dofunc("textinput",...)
 end
 
-function love.resize(...)
-	tab:dofunc("resize",...)
+function love.resize(w,h,...)
+	window.width = w
+	window.height = h
+	tab:dofunc("resize",w,h,...)
 end
 
 function love.quit(...)

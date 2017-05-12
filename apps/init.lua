@@ -25,6 +25,7 @@ function loadApp(app)
 			tabs[#tabs + 1] = tab
 			tabs[tab] = tab
 			tabs[file] = tab
+			tabs[ _G[file] ] = tab
 			require("apps/"..app.."/tabs/"..file)
 			tab:dofunc("load")
 		end

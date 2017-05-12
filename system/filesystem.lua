@@ -35,10 +35,6 @@ filesystem.getDirectory = function(self)
     return t
 end
 
-filesystem.newDirectory = function()
-	
-end
-
 package.preload["filesystem"] = function() return filesystem end
 
 return filesystem
