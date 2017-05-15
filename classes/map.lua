@@ -29,7 +29,7 @@ function map:draw()
 	end
 end
 
-function map:mousemoved(x,y,dx,dy)
+function map:move(dx,dy)
 	if love.mouse.isDown(2, 3) then
 		self:setPos(self.x-(dx/map_setting.scale) , self.y-(dy/map_setting.scale))
 	end
@@ -48,6 +48,18 @@ function map:setPos(x,y)
 			self.y = math.clamp(y , 1 , self.height - screen.height / map_setting.scale + 1)
 		else
 			self.y = y
+		end
+	end
+end
+
+function map:setTile(t,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
+		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			self[x][y] = t:new()
+			self[x][y].map = self
+			self[x][y].x = x
+			self[x][y].y = y
 		end
 	end
 end

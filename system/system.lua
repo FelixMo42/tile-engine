@@ -64,3 +64,13 @@ end
 math.clamp = function(val,min,max)
 	return math.min( math.max(val + 0,min + 0) , max + 0)
 end
+
+math.sign = function(n)
+	if n > 0 then
+		return 1
+	elseif n < 0 then
+		return -1
+	else
+		return 0
+	end
+end

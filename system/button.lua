@@ -38,11 +38,23 @@ button:addCallback("mousepressed","pressed",function(self)
 	self.pressed = self.over
 end )
 
+button:addCallback("mousepressed","used",function(self)
+	if not mouse.used and self.over then
+		mouse.used = true
+	end
+end)
+
 button:addCallback("mousereleased","callFunc",function(self)
-	if self.over and self.func then
+	if self.over and self.func and not mouse.used then
 		self:func()
 	end
 end )
+
+button:addCallback("mousereleased","used",function(self)
+	if not mouse.used and self.over then
+		mouse.used = true
+	end
+end)
 
 button:addCallback("mousereleased","released",function(self)
 	self.pressed = false

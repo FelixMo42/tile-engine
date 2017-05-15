@@ -38,15 +38,16 @@ function console:enter(text)
 		text = tonumber(text)
 		if apps[text] then
 			loadApp(apps[text])
+			console:clear(true)
 		else
 			print "number invalide. please re enter number."
 		end
 	else
 		if apps[text] then
 			loadApp(text)
+			console:clear(true)
 		else
 			print "none valide app name. please re enter name."
 		end
 	end
-	console:clear(true)
 end
