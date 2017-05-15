@@ -5,7 +5,8 @@ menu.ui:add( ellement.menu:new({
 }) , "tile" )
 
 menu.ui.tile:addChild( button:new({
-	text = "new tile",x = 5,y = screen.height - 25,width = screen.width - 10
+	text = "new tile",x = 5,y = screen.height - 25,width = screen.width - 10,
+	func = function() love.open(tile_editor) end
 }) , "new")
 
 menu.ui.tile:addChild( button:new({
@@ -19,7 +20,8 @@ menu.ui:add( ellement.menu:new({
 }) , "object" )
 
 menu.ui.object:addChild( button:new({
-	text = "new object",x = 5,y = screen.height - 25,width = screen.width - 10
+	text = "new object",x = 5,y = screen.height - 25,width = screen.width - 10,
+	func = function() love.open(tile_editor) end
 }) , "new")
 
 menu.ui.object:addChild( button:new({
@@ -33,7 +35,8 @@ menu.ui:add( ellement.menu:new({
 }) , "item" )
 
 menu.ui.item:addChild( button:new({
-	text = "new item",x = 5,y = screen.height - 25,width = screen.width - 10
+	text = "new item",x = 5,y = screen.height - 25,width = screen.width - 10,
+	func = function() love.open(tile_editor) end
 }) , "new")
 
 menu.ui.item:addChild( button:new({

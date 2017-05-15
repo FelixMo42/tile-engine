@@ -22,6 +22,7 @@ function ui:dofunc(f,...)
 			end
 		end
 	end
+	call(self,f,...)
 	if self.child.active then
 		for i , child in ipairs(self.child) do
 			if rawtype(child) == "table" then
@@ -33,7 +34,6 @@ function ui:dofunc(f,...)
 			end
 		end
 	end
-	call(self,f,...)
 end
 
 function ui:addChild(c,i,n)

@@ -1,5 +1,7 @@
 local ellement = {}
 
+--menu
+
 ellement.menu = button:new({
 	type = "menu"
 })
@@ -7,6 +9,8 @@ ellement.menu = button:new({
 ellement.menu:addCallback("mousereleased","open",function(self)
 	self.child.active = self.over or self.child:is("over")
 end)
+
+--textbox
 
 ellement.textbox = button:new({
 	type = "textbox",
@@ -31,7 +35,12 @@ ellement.textbox:addCallback("textinput","textinput",function(self,key,s)
 		if not self.active then return end
 		if love.keyboard.isDown("rgui","lgui") then return end
 	end
-	self.text = self.text..key
+	if not self.filter or self.filter:find(key) then 
+		self.text = self.text..key
+		if self.onEdit then
+			self:onEdit(key)
+		end
+	end
 end)
 
 ellement.textbox:addCallback("keyreleased","key actions",function(self,key)
@@ -58,10 +67,11 @@ ellement.textbox:addCallback("keyreleased","empty",function(self,key)
 end)
 
 ellement.textbox.draw.text = function(self)
+	local text = (self.startText or "")..(self.text or self.defText)..(self.endText or "")
 	love.graphics.setColor(self.textColor)
-	local l = #( ( {love.graphics.getFont():getWrap(self.text,self.width)} )[2] )
+	local l = #( ( {love.graphics.getFont():getWrap(text,self.width)} )[2] )
 	local y = self.y + self.height / 2 -  (l * love.graphics.getFont():getHeight())/2
-	love.graphics.printf(self.text,self.x,y,self.width,"center")
+	love.graphics.printf(text,self.x,y,self.width,"center")
 end
 
 package.preload["ellement"] = function() return ellement end

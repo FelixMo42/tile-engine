@@ -42,7 +42,7 @@ editor.ui:add( button:new({
 
 --world
 
-editor.world:add( {
+editor.ui:add( {
 	mousereleased = function(self,x,y,button)
 		if not mouse.used and button == 1 then
 			editor.map:setTile( tile:new({color = color.red}) , mouse.tile.sx,mouse.tile.sy , mouse.tile.ex,mouse.tile.ey )
@@ -56,21 +56,6 @@ editor.world:add( {
 		if not mouse.used and love.mouse.isDown(2,3) then
 			editor.map:move(dx,dy)
 		end
-	end,
-	draw = function()
-		love.graphics.setColor(0,0,255,100)
-		local s = map_setting.scale
-		if mouse.button == 1 then
-			local sx = (math.floor( math.min(mouse.sx , mouse.ex) / s + editor.map.x) - editor.map.x) * s
-			local sy = (math.floor( math.min(mouse.sy , mouse.ey) / s + editor.map.y) - editor.map.y) * s
-			local ex = (math.floor( math.max(mouse.sx , mouse.ex) / s + editor.map.x) - editor.map.x) * s
-			local ey = (math.floor( math.max(mouse.sy , mouse.ey) / s + editor.map.y) - editor.map.y) * s
-			love.graphics.rectangle("fill" , sx , sy , ex - sx + s , ey - sy + s)
-		else
-			local x = ( math.floor( mouse.x / s + editor.map.x) - editor.map.x) * s
-			local y = ( math.floor( mouse.y / s + editor.map.y) - editor.map.y) * s
-			love.graphics.rectangle("fill" , x , y , s , s)
-		end
 	end
 } , "manager")
 
@@ -80,4 +65,20 @@ function editor.open(map)
 	editor.map = map
 	editor.world.map = map
 	editor.world[1] = map
+end
+
+function editor.draw( ... )
+	love.graphics.setColor(0,0,255,100)
+	local s = map_setting.scale
+	if mouse.button == 1 then
+		local sx = (math.floor( math.min(mouse.sx , mouse.ex) / s + editor.map.x) - editor.map.x) * s
+		local sy = (math.floor( math.min(mouse.sy , mouse.ey) / s + editor.map.y) - editor.map.y) * s
+		local ex = (math.floor( math.max(mouse.sx , mouse.ex) / s + editor.map.x) - editor.map.x) * s
+		local ey = (math.floor( math.max(mouse.sy , mouse.ey) / s + editor.map.y) - editor.map.y) * s
+		love.graphics.rectangle("fill" , sx , sy , ex - sx + s , ey - sy + s)
+	else
+		local x = ( math.floor( mouse.x / s + editor.map.x) - editor.map.x) * s
+		local y = ( math.floor( mouse.y / s + editor.map.y) - editor.map.y) * s
+		love.graphics.rectangle("fill" , x , y , s , s)
+	end
 end
