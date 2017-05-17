@@ -15,6 +15,12 @@ mouse = {
 	used = false
 }
 
+getmetatable( font , {
+	__index = function(self,key)
+		self[key] = love.graphics.newFont(key)
+	end
+} )
+
 function love.open(t,...)
 	tab:dofunc("close",...)
 	if type(t) == "tab" then

@@ -37,9 +37,7 @@ ellement.textbox:addCallback("textinput","textinput",function(self,key,s)
 	end
 	if not self.filter or self.filter:find(key) then 
 		self.text = self.text..key
-		if self.onEdit then
-			self:onEdit(key)
-		end
+		if self.onEdit then self:onEdit(key) end
 	end
 end)
 
@@ -47,6 +45,7 @@ ellement.textbox:addCallback("keyreleased","key actions",function(self,key)
 	if not self.active then return end
 	if key == "backspace" then
 		self.text = string.sub(self.text, 1, -2)
+		if self.onEdit then self:onEdit(key) end
 	elseif love.keyboard.isDown("rgui","lgui") then
 		if key == "v" then
 			local text = love.system.getClipboardText()

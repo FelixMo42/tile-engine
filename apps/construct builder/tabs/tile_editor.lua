@@ -1,16 +1,23 @@
-tile_editor.tile = tile:new({map = {},color = {0,0,0}})
+--set up
+
+tile_editor.tile = tile:new({ color = {255,255,255} })
 
 --actions
 
 tile_editor.ui:add( ellement.textbox:new({
 	x = var:new(function() return screen.width/2 + 5 end), y = 5,
-	width = var:new(function() return screen.width/2 - 10 end)
+	width = var:new(function() return screen.width/2 - 10 end),
+	onEdit = function(self)
+		tile_editor.tile.name = self.text
+	end
 }) , "name" )
 
 tile_editor.ui:add( button:new({
 	text = "save", x = var:new(function() return screen.width/2 + 5 end),
 	width = var:new(function() return screen.width/4 - 7.5 end),
-	y = var:new(function() return screen.height - 25 end)
+	y = var:new(function() return screen.height - 25 end), func = function()
+		filesystem.save( tile_editor.tile )
+	end
 }) , "save" )
 
 tile_editor.ui:add( button:new({
@@ -22,7 +29,7 @@ tile_editor.ui:add( button:new({
 --states
 
 tile_editor.ui:add( ellement.textbox:new({
-	x = 5, startText = "red: ", y = 5, filter = "0123456789", text = "0",
+	x = 5, startText = "red: ", y = 5, filter = "0123456789", text = "255",
 	width = var:new(function() return screen.width / 2 - 10 end),
 	onEdit = function(self)
 		if #self.text > 0 then
@@ -34,7 +41,7 @@ tile_editor.ui:add( ellement.textbox:new({
 }) , "red" )
 
 tile_editor.ui:add( ellement.textbox:new({
-	x = 5, startText = "green: ", y = 30, filter = "0123456789", text = "0",
+	x = 5, startText = "green: ", y = 30, filter = "0123456789", text = "255",
 	width = var:new(function() return screen.width / 2 - 10 end),
 	onEdit = function(self)
 		if #self.text > 0 then
@@ -46,7 +53,7 @@ tile_editor.ui:add( ellement.textbox:new({
 }) , "green" )
 
 tile_editor.ui:add( ellement.textbox:new({
-	x = 5, startText = "blue: ", y = 55, filter = "0123456789", text = "0",
+	x = 5, startText = "blue: ", y = 55, filter = "0123456789", text = "255",
 	width = var:new(function() return screen.width / 2 - 10 end),
 	onEdit = function(self)
 		if #self.text > 0 then

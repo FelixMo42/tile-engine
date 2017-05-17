@@ -14,3 +14,5 @@ function tile:draw(x,y,s)
 		love.graphics.rectangle("line",x,y,s,s)
 	end
 end
+
+tiles = {}

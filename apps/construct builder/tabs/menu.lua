@@ -9,6 +9,14 @@ menu.ui.tile:addChild( button:new({
 	func = function() love.open(tile_editor) end
 }) , "new")
 
+for i , t in ipairs(tiles) do
+	menu.ui.tile:addChild(button:new({
+		text = t.name, y = 10 + 25 * i, x = 5,width = var:new(function()
+			return screen.width - 10
+		end)
+	}) , "tile_"..i )
+end
+
 menu.ui.tile:addChild( button:new({
 	draw = {},x = 0,y = 30,width = 10000,height = 10000
 }) , "bg")
@@ -31,7 +39,7 @@ menu.ui.object:addChild( button:new({
 --item
 
 menu.ui:add( ellement.menu:new({
-	text = "object", y = 5, x = 215
+	text = "item", y = 5, x = 215
 }) , "item" )
 
 menu.ui.item:addChild( button:new({

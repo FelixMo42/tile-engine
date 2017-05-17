@@ -13,6 +13,9 @@ ui = require "system/ui"
 var = require "system/var"
 button = require "system/button"
 ellement = require "system/ellement"
+filesystem = require "system/filesystem"
+
+filesystem.base = "save/"
 
 print = lambda:new(console.print , console)
 print "console on"

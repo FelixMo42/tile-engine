@@ -5,3 +5,5 @@ require "classes/object"
 require "classes/tile"
 require "classes/map"
 require "classes/player"
+
+filesystem.loadClass("tiles")
