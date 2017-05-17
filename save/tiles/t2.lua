@@ -1,1 +1,1 @@
-return tile:new({color = {[1] = 100,[2] = 100,[3] = 100},name = "wall",file = "t2"})
+return tile:new({color = {[1] = 150,[2] = 150,[3] = 150},name = "wall",file = "t2"})

@@ -31,7 +31,7 @@ button:addCallback("draw","text",function(self)
 	love.graphics.setColor(self.textColor)
 	local l = #( ( {love.graphics.getFont():getWrap(self.text,self.width)} )[2] )
 	local y = self.y + self.height / 2 -  (l * love.graphics.getFont():getHeight())/2
-	love.graphics.printf(self.text,self.x,y,self.width,"center")
+	love.graphics.printf(self.text,self.x,y,self.width,self.textMode or "center")
 end )
 
 button:addCallback("mousepressed","pressed",function(self)

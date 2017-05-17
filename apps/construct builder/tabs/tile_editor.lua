@@ -1,15 +1,9 @@
---set up
-
-tile_editor.tile = tile:new({ color = {255,255,255} })
-
 --actions
 
 tile_editor.ui:add( ellement.textbox:new({
 	x = var:new(function() return screen.width/2 + 5 end), y = 5,
 	width = var:new(function() return screen.width/2 - 10 end),
-	onEdit = function(self)
-		tile_editor.tile.name = self.text
-	end
+	onEdit = function(self) tile_editor.tile.name = self.text end
 }) , "name" )
 
 tile_editor.ui:add( button:new({
@@ -29,7 +23,7 @@ tile_editor.ui:add( button:new({
 --states
 
 tile_editor.ui:add( ellement.textbox:new({
-	x = 5, startText = "red: ", y = 5, filter = "0123456789", text = "255",
+	x = 5, startText = "red: ", y = 5, filter = "0123456789",
 	width = var:new(function() return screen.width / 2 - 10 end),
 	onEdit = function(self)
 		if #self.text > 0 then
@@ -41,7 +35,7 @@ tile_editor.ui:add( ellement.textbox:new({
 }) , "red" )
 
 tile_editor.ui:add( ellement.textbox:new({
-	x = 5, startText = "green: ", y = 30, filter = "0123456789", text = "255",
+	x = 5, startText = "green: ", y = 30, filter = "0123456789",
 	width = var:new(function() return screen.width / 2 - 10 end),
 	onEdit = function(self)
 		if #self.text > 0 then
@@ -53,7 +47,7 @@ tile_editor.ui:add( ellement.textbox:new({
 }) , "green" )
 
 tile_editor.ui:add( ellement.textbox:new({
-	x = 5, startText = "blue: ", y = 55, filter = "0123456789", text = "255",
+	x = 5, startText = "blue: ", y = 55, filter = "0123456789",
 	width = var:new(function() return screen.width / 2 - 10 end),
 	onEdit = function(self)
 		if #self.text > 0 then
@@ -65,6 +59,15 @@ tile_editor.ui:add( ellement.textbox:new({
 }) , "blue" )
 
 --functions
+
+function tile_editor.open(t)
+	tile_editor.tile = t or tile:new({ color = {255,255,255} })
+	--set values
+	tile_editor.ui.name.text = tile_editor.tile.name or ""
+	tile_editor.ui.red.text = tostring( tile_editor.tile.color[1] )
+	tile_editor.ui.green.text = tostring( tile_editor.tile.color[2] )
+	tile_editor.ui.blue.text = tostring( tile_editor.tile.color[3] )
+end
 
 function tile_editor.draw()
 	love.graphics.line(screen.width/2,5 , screen.width/2,screen.height-5)

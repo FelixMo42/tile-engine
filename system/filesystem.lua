@@ -1,6 +1,7 @@
 local filesystem = {}
 
 filesystem.base = ""
+filesystem.file = "/tile engine/"
 
 filesystem.getIndex = function(dir)
 	local dir = filesystem.getDirectory(dir,".lua")
@@ -14,10 +15,15 @@ end
 filesystem.toString = function(data)
 	if type(data) == "string" then
 		return '"'..tostring(data)..'"'
-	elseif type(data) == "number" then
-		return '['..tostring(data)..']'
 	end
 	return data
+end
+
+filesystem.keyToString = function(data)
+	if type(data) == "number" then
+		return '['..tostring(data)..']'
+	end
+	return tostring(data)
 end
 
 filesystem.classToString = function(data)
@@ -26,14 +32,14 @@ filesystem.classToString = function(data)
 		if data[key] ~= _G[data.type][key] then
 			if rawtype(value) == "table" then
 				if value.save then
-					s = s..key.." = "..value:save()..","
+					s = s..filesystem.keyToString(key).." = "..value:save()..","
 				elseif value.new then
-					s = s..key.." = "..filesystem.classToString(value)..","
+					s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
 				else
-					s = s..key.." = "..filesystem.tableToString(value)..","
+					s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
 				end
 			else
-				s = s..key.." = "..filesystem.toString(value)..","
+				s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
 			end
 		end
 	end
@@ -45,14 +51,14 @@ filesystem.tableToString = function(data)
 	for key , value in pairs( data ) do
 		if rawtype(value) == "table" then
 			if value.save then
-				s = s..key.." = "..value:save()..","
+				s = s..filesystem.keyToString(key).." = "..value:save()..","
 			elseif value.new then
-				s = s..key.." = "..filesystem.classToString(value)..","
+				s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
 			else
-				s = s..key.." = "..filesystem.tableToString(value)..","
+				s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
 			end
 		end
-		s = s..key.." = "..filesystem.toString(value)..","
+		s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
 	end
 	return s:sub(1,-2).."}"
 end
@@ -72,14 +78,14 @@ filesystem.save = function(data,dir)
 end
 
 filesystem.write = function(dir , data)
-	local path = love.filesystem.getSourceBaseDirectory().."/tile engine/"..filesystem.base
+	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file..filesystem.base
 	local f = io.open(path..dir, "w")
 	f:write(data)
 	f:close()
 end
 
 filesystem.getDirectory = function(dir,ext)
-	local path = love.filesystem.getSourceBaseDirectory().."/tile engine/"..filesystem.base
+	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file..filesystem.base
 	local i, t = 0, {}
     local pfile = io.popen('ls -a "'..path..dir..'"')
     for filename in pfile:lines() do
@@ -96,7 +102,7 @@ end
 
 filesystem.loadClass = function(dir,ext)
 	ext = ext or ".lua"
-	local path = love.filesystem.getSourceBaseDirectory().."/tile engine/"..filesystem.base
+	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file..filesystem.base
 	local i , t , c = 0 , {} , _G[dir]
     local pfile = io.popen('ls -a "'..path..dir..'"')
     for filename in pfile:lines() do
@@ -104,10 +110,16 @@ filesystem.loadClass = function(dir,ext)
 	    	if not ext or ext:find(ext) then
 		        c[#c + 1] = dofile(path..dir.."/"..filename)
 		        c[ c[#c].name ] = c[#c]
+		        c[ c[#c].file ] = c[#c]
 		        c[ c[#c] ] = c[#c]
 		    end
 		end
     end
+end
+
+filesystem.delet = function(dir)
+	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file:gsub(" ","\\ ")..filesystem.base
+	os.remove(path..dir)
 end
 
 package.preload["filesystem"] = function() return filesystem end

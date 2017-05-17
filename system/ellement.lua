@@ -66,11 +66,11 @@ ellement.textbox:addCallback("keyreleased","empty",function(self,key)
 end)
 
 ellement.textbox.draw.text = function(self)
-	local text = (self.startText or "")..(self.text or self.defText)..(self.endText or "")
+	local text = (self.startText or "")..(self.text or self.defText or "")..(self.endText or "")
 	love.graphics.setColor(self.textColor)
 	local l = #( ( {love.graphics.getFont():getWrap(text,self.width)} )[2] )
 	local y = self.y + self.height / 2 -  (l * love.graphics.getFont():getHeight())/2
-	love.graphics.printf(text,self.x,y,self.width,"center")
+	love.graphics.printf(text,self.x,y,self.width,self.textMode or "center")
 end
 
 package.preload["ellement"] = function() return ellement end
