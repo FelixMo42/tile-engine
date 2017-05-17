@@ -2,51 +2,87 @@
 
 tabs.editor:addLayer("world" , 1)
 editor.world:add( {} , "map" )
+editor.mode = ""
 mouse.tile = {}
 
---menu
+--tile
 
-editor.ui:add( button:new({
+editor.ui:add( ellement.menu:new({
 	text = "tile", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ), x = 0,
-	width = var:new( function() return screen.width / 5 end )
+	width = var:new( function() return screen.width / 5 end ),
+	func = function() editor.mode = "tile"; editor.selected = nil end
 }) , "tile" )
+
+editor.ui.tile:addChild( ellement.menu:new({
+	text = "tiles" , b_over = 0 , bodyColor_over = color.grey,
+}) , "tiles" )
+
+for i , t in ipairs( tiles ) do
+	editor.ui.tile.child.tiles:addChild( button:new({
+		text = t.name, tile = t, y = 20 * i, func = function(self)
+			editor.selected = self.tile
+			self.name = self.tile.name
+		end
+	}) )
+end
+
+--object
 
 editor.ui:add( button:new({
 	text = "object", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return screen.width / 5 end ),
-	width = var:new( function() return screen.width / 5 end )
+	width = var:new( function() return screen.width / 5 end ),
+	func = function() editor.mode = "object"; editor.selected = nil end
 }) , "object" )
+
+--item
 
 editor.ui:add( button:new({
 	text = "item", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 2 * (screen.width / 5) end ),
-	width = var:new( function() return screen.width / 5 end )
+	width = var:new( function() return screen.width / 5 end ),
+	func = function() editor.mode = "item"; editor.selected = nil end
 }) , "item" )
+
+--players
 
 editor.ui:add( button:new({
 	text = "players", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 3 * (screen.width / 5) end ),
-	width = var:new( function() return screen.width / 5 end )
+	width = var:new( function() return screen.width / 5 end ),
+	func = function() editor.mode = "players"; editor.selected = nil end
 }) , "players" )
+
+--options
 
 editor.ui:add( button:new({
 	text = "options", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 4 * (screen.width / 5) end ),
-	width = var:new( function() return screen.width / 5 end )
+	width = var:new( function() return screen.width / 5 end ),
+	func = function() editor.mode = "tile"; editor.selected = nil end
 }) , "options" )
 
 --world
 
+local function onClick()
+	if editor.mode == "tile" then
+		if editor.selected then
+			editor.map:setTile(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
+		end
+	end
+end
+
 editor.ui:add( {
 	mousereleased = function(self,x,y,button)
-		if not mouse.used and button == 1 then
-			editor.map:setTile( tile:new({color = color.red}) , mouse.tile.sx,mouse.tile.sy , mouse.tile.ex,mouse.tile.ey )
-		end
+		if not mouse.used and button == 1 then onClick() end
+	end,
+	wheelmoved = function(self,x,y)
+		editor.map:setScale(map_setting.scale + y)
 	end,
 	mousemoved = function(self,x,y,dx,dy)
 		mouse.tile.sx = math.floor(mouse.sx / map_setting.scale + editor.map.x)

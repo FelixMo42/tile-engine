@@ -119,7 +119,7 @@ end
 
 filesystem.delet = function(dir)
 	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file:gsub(" ","\\ ")..filesystem.base
-	os.remove(path..dir)
+	io.popen("rm "..path..dir)
 end
 
 package.preload["filesystem"] = function() return filesystem end

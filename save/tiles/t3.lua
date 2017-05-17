@@ -1,1 +1,0 @@
-return tile:new({color = {[1] = 255,[2] = 255,[3] = 255},name = "rand tile",file = "t3"})

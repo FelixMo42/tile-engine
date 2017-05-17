@@ -1,7 +1,3 @@
-require "system"
-require "classes"
-require "apps"
-
 screen = {
 	width = love.graphics.getWidth(),
 	height = love.graphics.getHeight()
@@ -15,11 +11,15 @@ mouse = {
 	used = false
 }
 
-getmetatable( font , {
+font = setmetatable( {} , {
 	__index = function(self,key)
 		self[key] = love.graphics.newFont(key)
 	end
 } )
+
+require "system"
+require "classes"
+require "apps"
 
 function love.open(t,...)
 	tab:dofunc("close",...)
@@ -85,6 +85,10 @@ function love.mousereleased(...)
 	mouse.drag = nil
 	mouse.ex = mouse.x
 	mouse.ey = mouse.y
+end
+
+function love.wheelmoved(...)
+	tab:dofunc("wheelmoved",...)
 end
 
 function love.mousefocus(...)

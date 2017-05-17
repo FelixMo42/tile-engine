@@ -29,6 +29,19 @@ function map:draw()
 	end
 end
 
+function map:resize(w,h)
+	self:setScale(map_setting.scale)
+	self:setPos(self.x , self.y)
+end
+
+function map:setScale(s)
+	local minZoom = math.max(screen.height / self.height , screen.width / self.width , map_setting.minZoom )
+	local maxZoom = math.min(screen.height , screen.width , map_setting.maxZoom)
+	s = math.clamp(s,minZoom,maxZoom)
+	self:setPos(self.x+((screen.width/map_setting.scale)-(screen.width/s))/2 ,  self.y+((screen.width/map_setting.scale)-(screen.width/s))/2)
+	map_setting.scale = s
+end
+
 function map:move(dx,dy)
 	if love.mouse.isDown(2, 3) then
 		self:setPos(self.x-(dx/map_setting.scale) , self.y-(dy/map_setting.scale))
@@ -64,4 +77,4 @@ function map:setTile(t,sx,sy,ex,ey)
 	end
 end
 
-map_setting = {scale = 60 , line = true , clamp = true}
+map_setting = {scale = 60 , line = true , clamp = true , minZoom = 10 , maxZoom = 100}
