@@ -2,17 +2,45 @@ menu.map = {width = 100 , height = 100}
 
 --new map
 
+menu.ui:add( ui:new() , "maps" )
+
+local function map_setup()
+	menu.ui.maps.child = {active = true}
+	for i , t in ipairs(maps) do
+		menu.ui.maps:addChild(button:new({
+			text = "  "..t.name, y = 25 * i - 20, x = 5, textMode = "left", map = t,
+			width = var:new(function() return screen.width / 8 * 3 - 10 end),
+			func = function(self) love.open(editor,self.map) end
+		}) , "map_"..i )
+		menu.ui.maps:addChild(button:new({
+			text = "delet", y = 25 * i - 20, map = t, i = i,
+			x = var:new(function() return screen.width / 8 * 3 end),
+			width = var:new(function() return screen.width / 8 - 5 end),
+			func = function(self)
+				filesystem.delet( "maps/"..self.map.file..".lua" )
+				maps[ self.map ] = nil
+				maps[ self.map.name ] = nil
+				maps[ self.map.file ] = nil
+				maps[ self.i ] = nil
+				map_setup()
+			end
+		}) , "map_"..i.."_delet" )
+	end
+end
+
+map_setup()
+
 menu.ui:add( ellement.menu:new({
 	text = "new map", x = 5,
-	width = var:new(function() return  (screen.width / 3) - 10 end),
+	width = var:new(function() return  (screen.width / 2) - 10 end),
 	y = var:new(function() return screen.height - 25 end)
 }) , "new_map" )
 
 --new map name
 
 menu.ui.new_map:addChild( ellement.textbox:new({
-	y = 5, width = var:new(function() return 2 * (screen.width / 3) - 10 end),
-	x = var:new(function() return (screen.width / 3) + 5 end),
+	y = 5, width = var:new(function() return (screen.width / 2) - 10 end),
+	x = var:new(function() return (screen.width / 2) + 5 end),
 	text_def = "name"
 }) , "name" )
 
@@ -23,7 +51,7 @@ end)
 --new map width
 
 menu.ui.new_map:addChild( ui:new({
-	x = var:new(function() return (screen.width / 3) + 5 end), y = 30
+	x = var:new(function() return (screen.width / 2) + 5 end), y = 30
 }) , "width_text" )
 
 menu.ui.new_map.child.width_text:addCallback("draw","text",function(self)
@@ -65,7 +93,7 @@ menu.ui.new_map:addChild( button:new({
 --new map height
 
 menu.ui.new_map:addChild( ui:new({
-	x = var:new(function() return (screen.width / 3) + 5 end), y = 55
+	x = var:new(function() return (screen.width / 2) + 5 end), y = 55
 }) , "height_text" )
 
 menu.ui.new_map.child.height_text:addCallback("draw","text",function(self)
@@ -109,8 +137,8 @@ menu.ui.new_map:addChild( button:new({
 menu.ui.new_map:addChild( button:new({
 	text = "save and open", func = function() return menu.new() end,
 	y = var:new(function() return screen.height - 25 end),
-	x = var:new(function(self) return screen.width / 3 + 5 end),
-	width = var:new(function() return 2 * (screen.width / 3) - 10 end)
+	x = var:new(function(self) return screen.width / 2 + 5 end),
+	width = var:new(function() return (screen.width / 2) - 10 end)
 }) , "open" )
 
 --new map backdrop
@@ -130,5 +158,5 @@ function menu.new()
 end
 
 function menu.draw()
-	love.graphics.line(screen.width / 3,5 , screen.width / 3,screen.height-5)
+	love.graphics.line(screen.width / 2,5 , screen.width / 2,screen.height-5)
 end

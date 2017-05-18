@@ -5,6 +5,8 @@ map = class:new({
 })
 
 function map:load()
+	--setup
+	self:setScale( map_setting.scale )
 	--tiles
 	for x = 1 , self.width do
 		self[x] = self[x] or {}
@@ -31,7 +33,6 @@ end
 
 function map:resize(w,h)
 	self:setScale(map_setting.scale)
-	self:setPos(self.x , self.y)
 end
 
 function map:setScale(s)
@@ -49,14 +50,14 @@ function map:move(dx,dy)
 end
 
 function map:setPos(x,y)
-	if x and x ~= -1 then
+	if x then
 		if map_setting.clamp then
 			self.x = math.clamp(x , 1 , self.width - screen.width / map_setting.scale + 1)
 		else
 			self.x = x
 		end
 	end
-	if y and y ~= -1 then
+	if y then
 		if map_setting.clamp then
 			self.y = math.clamp(y , 1 , self.height - screen.height / map_setting.scale + 1)
 		else
@@ -77,4 +78,24 @@ function map:setTile(t,sx,sy,ex,ey)
 	end
 end
 
-map_setting = {scale = 60 , line = true , clamp = true , minZoom = 10 , maxZoom = 100}
+function map:save()
+	local s = "map:new({width = "..self.width..",height = "..self.width..","
+	s = s.."file = \""..self.file.."\"," 
+	for x = 1 , self.width do
+		s = s.."{"
+		for y = 1 , self.height do
+			if self[x][y].file then
+				s = s.."["..y.."] = tiles."..self[x][y].file..":new(),"
+			end
+		end
+		s = s.."},\n"
+	end
+	return s.."name = \""..self.name.."\"})"
+end
+
+maps = {}
+
+map_setting = {
+	scale = 60 , minZoom = 10 , maxZoom = 100,
+	line = true , clamp = true
+}

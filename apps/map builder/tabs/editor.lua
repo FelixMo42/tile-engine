@@ -21,15 +21,15 @@ editor.ui.tile:addChild( ellement.menu:new({
 for i , t in ipairs( tiles ) do
 	editor.ui.tile.child.tiles:addChild( button:new({
 		text = t.name, tile = t, y = 20 * i, func = function(self)
+			editor.ui.tile.child.tiles.text = self.tile.name
 			editor.selected = self.tile
-			self.name = self.tile.name
 		end
 	}) )
 end
 
 --object
 
-editor.ui:add( button:new({
+editor.ui:add( ellement.menu:new({
 	text = "object", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return screen.width / 5 end ),
@@ -39,7 +39,7 @@ editor.ui:add( button:new({
 
 --item
 
-editor.ui:add( button:new({
+editor.ui:add( ellement.menu:new({
 	text = "item", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 2 * (screen.width / 5) end ),
@@ -49,7 +49,7 @@ editor.ui:add( button:new({
 
 --players
 
-editor.ui:add( button:new({
+editor.ui:add( ellement.menu:new({
 	text = "players", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 3 * (screen.width / 5) end ),
@@ -59,13 +59,18 @@ editor.ui:add( button:new({
 
 --options
 
-editor.ui:add( button:new({
+editor.ui:add( ellement.menu:new({
 	text = "options", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 4 * (screen.width / 5) end ),
 	width = var:new( function() return screen.width / 5 end ),
 	func = function() editor.mode = "tile"; editor.selected = nil end
 }) , "options" )
+
+editor.ui.options:addChild( button:new({
+	text = "save", bu_over = 0, bodyColor_over = color.grey,
+	func = function() filesystem.save( editor.map ) end
+}) )
 
 --world
 

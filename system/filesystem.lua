@@ -3,6 +3,13 @@ local filesystem = {}
 filesystem.base = ""
 filesystem.file = "/tile engine/"
 
+filesystem.getClassFile = function(data)
+	if _G[data.type.."_setting"] and _G[data.type.."_setting"].file then
+		return _G[data.type.."_setting"].file
+	end
+	return data.type.."s"
+end
+
 filesystem.getIndex = function(dir)
 	local dir = filesystem.getDirectory(dir,".lua")
 	if #dir > 0 then
@@ -65,7 +72,7 @@ end
 
 filesystem.save = function(data,dir)
 	if not data.file then
-		local dir = data.type:sub(1,1)..filesystem.getIndex( (dir or data.type.."s") )
+		local dir = data.type:sub(1,1)..filesystem.getIndex( (dir or filesystem.getClassFile(data) ) )
 		data.file = dir
 	end
 	local t = "return "
@@ -74,7 +81,7 @@ filesystem.save = function(data,dir)
 	else
 		t = t..filesystem.classToString(data)
 	end
-	return filesystem.write( (dir or data.type.."s").."/"..data.file..".lua" , t )
+	return filesystem.write( (dir or filesystem.getClassFile(data) ).."/"..data.file..".lua" , t )
 end
 
 filesystem.write = function(dir , data)
