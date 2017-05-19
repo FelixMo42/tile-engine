@@ -50,6 +50,12 @@ function map:draw()
 	end
 end
 
+function map:update(dt)
+	for k , p in pairs(self.players) do
+		p:update(dt)
+	end
+end
+
 function map:resize(w,h)
 	self:setScale(map_setting.scale)
 end
@@ -119,6 +125,16 @@ function map:save()
 		s = s.."},\n"
 	end
 	return s.."name = \""..self.name.."\"})"
+end
+
+local mt = getmetatable(map)
+
+mt.__rawget = function(self , key)
+	if defrawget(self,key) then
+		return defrawget(self,key)
+	elseif type(key) == "number" then
+		return {}
+	end
 end
 
 maps = {}
