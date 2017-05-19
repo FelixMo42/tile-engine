@@ -1,7 +1,9 @@
 map = class:new({
 	type = "map",
 	width = 100, height = 100,
-	x = 1, y = 1
+	x = 1, y = 1,
+	playerMap = {},
+	players = {}
 })
 
 function map:load()
@@ -16,6 +18,15 @@ function map:load()
 			self[x][y].map = self
 		end
 	end
+	--player map
+	for x = 1 , self.width do
+		self.playerMap[x] = self.playerMap[x] or {}
+	end
+	for k , p in pairs(self.players) do
+		p.map = self
+		p.tile = self[p.x][p.y]
+		self.playerMap[p.x][p.y] = p
+	end
 end
 
 function map:draw()
@@ -27,6 +38,14 @@ function map:draw()
 	for x = sx , ex do
 		for y = sy , ey do
 			self[x][y]:draw()
+		end
+	end
+	--players
+	for x = sx , ex do
+		for y = sy , ey do
+			if self.playerMap[x][y] then
+				self.playerMap[x][y]:draw()
+			end
 		end
 	end
 end
@@ -76,6 +95,15 @@ function map:setTile(t,sx,sy,ex,ey)
 			self[x][y].y = y
 		end
 	end
+end
+
+function map:addPlayer(p)
+	p = p or player:new()
+	self.players[#self.players] = p
+	p.map = self
+	p.tile = self[p.x][p.y]
+	self.playerMap[p.x][p.y] = p
+	return p
 end
 
 function map:save()

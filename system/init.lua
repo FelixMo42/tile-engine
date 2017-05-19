@@ -15,6 +15,8 @@ button = require "system/button"
 ellement = require "system/ellement"
 filesystem = require "system/filesystem"
 
+--set up
+
 filesystem.base = "save/"
 
 print = lambda:new(console.print , console)

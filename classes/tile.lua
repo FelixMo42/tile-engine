@@ -1,6 +1,7 @@
 tile = class:new({
 	type = "tile",
-	color = color.green
+	color = color.green,
+	walkable = true
 })
 
 function tile:draw(x,y,s)

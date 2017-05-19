@@ -74,3 +74,16 @@ math.sign = function(n)
 		return 0
 	end
 end
+
+--table
+
+table.reverse = function(t)
+	local n = {}
+	for k , v in pairs(t) do
+		n[k] = v
+	end
+	for i , v in ipairs(t) do
+		n[#t - (i - 1)] = v
+	end
+	return n
+end

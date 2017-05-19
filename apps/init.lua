@@ -17,6 +17,9 @@ tabs[1] = console
 tab = console
 
 function loadApp(app)
+	if love.filesystem.exists( "apps/"..app.."/system" ) then
+		require("apps/"..app.."/system")
+	end
 	for i , file in pairs(love.filesystem.getDirectoryItems("apps/"..app.."/tabs")) do
 		if file:find(".lua") then
 			file = file:gsub(".lua","")
