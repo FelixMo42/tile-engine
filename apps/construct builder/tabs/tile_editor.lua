@@ -58,6 +58,15 @@ tile_editor.ui:add( ellement.textbox:new({
 	end
 }) , "blue" )
 
+tile_editor.ui:add( button:new({
+	x = 5, text = "walkable: ", y = 80,
+	width = var:new(function() return screen.width / 2 - 10 end),
+	func = function(self)
+		tile_editor.tile.walkable = not tile_editor.tile.walkable
+		self.text = "walkable: "..tostring(tile_editor.tile.walkable)
+	end
+}) , "walkable" )
+
 --functions
 
 function tile_editor.open(t)
@@ -67,6 +76,7 @@ function tile_editor.open(t)
 	tile_editor.ui.red.text = tostring( tile_editor.tile.color[1] )
 	tile_editor.ui.green.text = tostring( tile_editor.tile.color[2] )
 	tile_editor.ui.blue.text = tostring( tile_editor.tile.color[3] )
+	tile_editor.ui.walkable.text = "walkable: "..tostring(tile_editor.tile.walkable)
 end
 
 function tile_editor.draw()

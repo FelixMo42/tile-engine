@@ -23,7 +23,7 @@ filesystem.toString = function(data)
 	if type(data) == "string" then
 		return '"'..tostring(data)..'"'
 	end
-	return data
+	return tostring(data)
 end
 
 filesystem.keyToString = function(data)

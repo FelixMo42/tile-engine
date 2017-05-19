@@ -1,1 +1,1 @@
-return tile:new({color = {[1] = 150,[2] = 150,[3] = 150},name = "wall",file = "t2"})
+return tile:new({walkable = false,color = {[1] = 150,[2] = 150,[3] = 150},file = "t2",name = "wall"})
