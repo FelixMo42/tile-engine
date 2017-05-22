@@ -11,7 +11,7 @@ editor.ui:add( ellement.menu:new({
 	text = "tile", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ), x = 0,
 	width = var:new( function() return screen.width / 5 end ),
-	func = function() editor.mode = "tile"; editor.selected = nil end
+	func = function() editor.reset("tile") end
 }) , "tile" )
 
 editor.ui.tile:addChild( ellement.menu:new({
@@ -34,7 +34,7 @@ editor.ui:add( ellement.menu:new({
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return screen.width / 5 end ),
 	width = var:new( function() return screen.width / 5 end ),
-	func = function() editor.mode = "object"; editor.selected = nil end
+	func = function() editor.reset("object") end
 }) , "object" )
 
 --item
@@ -44,18 +44,23 @@ editor.ui:add( ellement.menu:new({
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 2 * (screen.width / 5) end ),
 	width = var:new( function() return screen.width / 5 end ),
-	func = function() editor.mode = "item"; editor.selected = nil end
+	func = function() editor.reset("item") end
 }) , "item" )
 
 --players
 
 editor.ui:add( ellement.menu:new({
-	text = "players", b_over = 0 , bu_over = 0, bodyColor_over = color.grey,
+	text = "players", b_over = 0 , bodyColor_over = color.grey,
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 3 * (screen.width / 5) end ),
 	width = var:new( function() return screen.width / 5 end ),
-	func = function() editor.mode = "players"; editor.selected = nil end
+	func = function() editor.reset("players") end
 }) , "players" )
+
+editor.ui.players:addChild( button:new({
+	text = "spawn", b_over = 0 , bodyColor_over = color.grey,
+	func = function() editor.selected = "spawn" end
+}) , "spawn")
 
 --options
 
@@ -64,13 +69,13 @@ editor.ui:add( ellement.menu:new({
 	y = var:new( function() return screen.height - 20 end ),
 	x = var:new( function() return 4 * (screen.width / 5) end ),
 	width = var:new( function() return screen.width / 5 end ),
-	func = function() editor.mode = "tile"; editor.selected = nil end
+	func = function() editor.reset("options") end
 }) , "options" )
 
 editor.ui.options:addChild( button:new({
-	text = "save", bu_over = 0, bodyColor_over = color.grey,
+	text = "save", b_over = 0, bodyColor_over = color.grey,
 	func = function() filesystem.save( editor.map ) end
-}) )
+}) , "save")
 
 --world
 
@@ -78,6 +83,11 @@ local function onClick()
 	if editor.mode == "tile" then
 		if editor.selected then
 			editor.map:setTile(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
+		end
+	elseif editor.mode == "players" then
+		if editor.selected == "spawn" then
+			editor.map.spawn.x = mouse.tile.sx
+			editor.map.spawn.y = mouse.tile.sy
 		end
 	end
 end
@@ -101,6 +111,11 @@ editor.ui:add( {
 } , "manager")
 
 --functions
+
+function editor.reset(name)
+	editor.mode = name
+	editor.selected = nil
+end
 
 function editor.open(map)
 	editor.map = map

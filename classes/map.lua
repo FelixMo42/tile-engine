@@ -3,7 +3,8 @@ map = class:new({
 	width = 100, height = 100,
 	x = 1, y = 1,
 	playerMap = {},
-	players = {}
+	players = {},
+	spawn = {x = 1,y = 1}
 })
 
 function map:load()
@@ -113,8 +114,16 @@ function map:addPlayer(p)
 end
 
 function map:save()
-	local s = "map:new({width = "..self.width..",height = "..self.width..","
-	s = s.."file = \""..self.file.."\"," 
+	local s = "map:new({"
+	for k , v in pairs(self) do
+		if rawtype(v) ~= "table" and v ~= map[k] and type(k) == "string" then
+			if type(v) == "string" then
+				s = s..k.." = \""..v.."\","
+			else
+				s = s..k.." = "..v..","
+			end
+		end
+	end
 	for x = 1 , self.width do
 		s = s.."{"
 		for y = 1 , self.height do
@@ -124,7 +133,8 @@ function map:save()
 		end
 		s = s.."},\n"
 	end
-	return s.."name = \""..self.name.."\"})"
+	s = s.."spawn = {x = "..self.spawn.x..",y = "..self.spawn.y.."}"
+	return s.."})"
 end
 
 local mt = getmetatable(map)

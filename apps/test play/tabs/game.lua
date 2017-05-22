@@ -11,12 +11,15 @@ function game.open(map)
 	game.map = map
 	game.world.map = map
 	game.world[1] = map
+	game.player.x = map.spawn.x
+	game.player.y = map.spawn.y
 	map:addPlayer( game.player )
 end
 
 function game.update()
-	local x , y = game.player.x , game.player.y
-	game.map:setPos(x - (screen.width / map_setting.scale) / 2 , y - (screen.height / map_setting.scale) / 2)
+	local x = game.player.x - (screen.width / map_setting.scale) / 2
+	local y = game.player.y - (screen.height / map_setting.scale) / 2
+	game.map:setPos(x + .5, y + .5)
 end
 
 function game.mousemoved(x,y,dx,dy)
