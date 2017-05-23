@@ -7,4 +7,5 @@ require "classes/map"
 require "classes/player"
 
 filesystem.loadClass("tiles")
+filesystem.loadClass("objects")
 filesystem.loadClass("maps")

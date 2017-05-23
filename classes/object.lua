@@ -1,5 +1,12 @@
 object = class:new({
-	type = "object"
+	type = "object",
+	color = color.brown,
+	walkable = false
 })
+
+function object:draw(x,y,s)
+	love.graphics.setColor(self.color)
+	love.graphics.rectangle("fill",x,y,s,s)
+end
 
 objects = {}

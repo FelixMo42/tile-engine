@@ -47,9 +47,37 @@ menu.ui:add( ellement.menu:new({
 	text = "object", y = 5, x = 110
 }) , "object" )
 
+menu.ui.object:addChild( ui:new() , "objects")
+
+local function object_setup()
+	menu.ui.object.child.objects.child = {active = true}
+	for i , t in ipairs(objects) do
+		menu.ui.object.child.objects:addChild(button:new({
+			text = "  "..t.name, y = 10 + 25 * i, x = 5, textMode = "left", object = t,
+			width = var:new(function() return screen.width / 4 * 3 - 5 end),
+			func = function(self) love.open(tile_editor,self.object) end
+		}) , "tile_"..i )
+		menu.ui.object.child.objects:addChild(button:new({
+			text = "delet", y = 10 + 25 * i, object = t, i = i,
+			x = var:new(function() return screen.width / 4 * 3 + 5 end),
+			width = var:new(function() return screen.width / 4 - 10 end),
+			func = function(self)
+				filesystem.delet( self.object.type.."s/"..self.object.file..".lua" )
+				objects[ self.object ] = nil
+				objects[ self.object.name ] = nil
+				objects[ self.object.file ] = nil
+				objects[ self.i ] = nil
+				object_setup()
+			end
+		}) , "tile_"..i.."_delet" )
+	end
+end
+
+object_setup()
+
 menu.ui.object:addChild( button:new({
 	text = "new object",x = 5,y = screen.height - 25,width = screen.width - 10,
-	func = function() love.open(tile_editor) end
+	func = function() love.open(object_editor) end
 }) , "new")
 
 menu.ui.object:addChild( button:new({

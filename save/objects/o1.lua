@@ -1,0 +1,1 @@
+return object:new({color = {[1] = 139,[2] = 69,[3] = 42},file = "o1",name = "chest"})

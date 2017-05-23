@@ -71,7 +71,7 @@ function pathfinder:path(map , sx,sy , ex,ey)
 		--cheak neighbours
 		local n = self:neighbours(current , ex , ey , map)
 		for i = 1 , #n do
-			if self.map[n[i].x][n[i].y].walkable and not get(closed , n[i].x , n[i].y) then
+			if self.map[n[i].x][n[i].y]:open() and not get(closed , n[i].x , n[i].y) then
 				add(open , n[i])
 			end
 		end

@@ -37,6 +37,19 @@ editor.ui:add( ellement.menu:new({
 	func = function() editor.reset("object") end
 }) , "object" )
 
+editor.ui.object:addChild( ellement.menu:new({
+	text = "objects" , b_over = 0 , bodyColor_over = color.grey,
+}) , "objects" )
+
+for i , o in ipairs( objects ) do
+	editor.ui.object.child.objects:addChild( button:new({
+		text = o.name, object = o, y = 20 * i, func = function(self)
+			editor.ui.object.child.objects.text = self.object.name
+			editor.selected = self.object
+		end
+	}) )
+end
+
 --item
 
 editor.ui:add( ellement.menu:new({
@@ -83,6 +96,10 @@ local function onClick()
 	if editor.mode == "tile" then
 		if editor.selected then
 			editor.map:setTile(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
+		end
+	elseif editor.mode == "object" then
+		if editor.selected then
+			editor.map:setObject(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		end
 	elseif editor.mode == "players" then
 		if editor.selected == "spawn" then

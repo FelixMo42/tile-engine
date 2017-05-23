@@ -104,6 +104,15 @@ function map:setTile(t,sx,sy,ex,ey)
 	end
 end
 
+function map:setObject(o,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
+		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			self[x][y]:setObject( o:new() )
+		end
+	end
+end
+
 function map:addPlayer(p)
 	p = p or player:new()
 	self.players[#self.players] = p
@@ -111,6 +120,14 @@ function map:addPlayer(p)
 	p.tile = self[p.x][p.y]
 	self.playerMap[p.x][p.y] = p
 	return p
+end
+
+function map:saveTile(x,y)
+	local s = "tiles."..self[x][y].file..":new({"
+		if self[x][y].object then
+			s = s.."object = objects."..self[x][y].object.file
+		end
+	return s.."}),"
 end
 
 function map:save()
@@ -128,7 +145,7 @@ function map:save()
 		s = s.."{"
 		for y = 1 , self.height do
 			if self[x][y].file then
-				s = s.."["..y.."] = tiles."..self[x][y].file..":new(),"
+				s = s.."["..y.."] = "..self:saveTile(x,y)
 			end
 		end
 		s = s.."},\n"

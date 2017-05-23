@@ -4,7 +4,20 @@ tile = class:new({
 	walkable = true
 })
 
+function tile:open()
+	if self.object and not self.object.walkable then return false end
+	if self.item and not self.object.walkable then return false end
+	return self.walkable
+end
+
+function tile:load()
+	if self.object then
+		self:setObject(self.object)
+	end
+end
+
 function tile:draw(x,y,s)
+	--tile
 	local s = s or map_setting.scale
 	local x = x or (self.x - self.map.x) * map_setting.scale
 	local y = y or (self.y - self.map.y) * map_setting.scale
@@ -14,6 +27,20 @@ function tile:draw(x,y,s)
 		love.graphics.setColor(color.black)
 		love.graphics.rectangle("line",x,y,s,s)
 	end
+	--object
+	if self.object then
+		self.object:draw(x,y,s)
+	end
+	--item
+	if self.object then
+		self.object:draw(x,y,s)
+	end
+end
+
+function tile:setObject(o)
+	o.map = self.map
+	o.tile = self
+	self.object = o
 end
 
 tiles = {}
