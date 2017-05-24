@@ -87,3 +87,18 @@ table.reverse = function(t)
 	end
 	return n
 end
+
+table.count = function(t)
+	local c = 0
+	for k , v in pairs(t) do
+		c = c + 1
+	end
+	return c
+end
+
+table.empty = function(t)
+	for k , v in pairs(t) do
+		return false
+	end
+	return true
+end

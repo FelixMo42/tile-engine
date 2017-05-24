@@ -6,6 +6,8 @@ ellement.menu = button:new({
 	type = "menu"
 })
 
+ellement.menu.child.active = false
+
 ellement.menu:addCallback("mousereleased","open",function(self)
 	self.child.active = self.over or self.child:is("over")
 end)

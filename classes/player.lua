@@ -37,4 +37,6 @@ function player:setPos(x,y)
 	self.map.playerMap[x][y] = self
 end
 
-player_setting = {speed = 5}
+npcs = {}
+
+player_setting = {speed = 5 , file = "npcs"}

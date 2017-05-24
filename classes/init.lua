@@ -6,6 +6,7 @@ require "classes/tile"
 require "classes/map"
 require "classes/player"
 
+filesystem.loadClass("npcs")
 filesystem.loadClass("tiles")
 filesystem.loadClass("objects")
 filesystem.loadClass("maps")

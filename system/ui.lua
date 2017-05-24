@@ -1,6 +1,6 @@
 local ui = class:new({
 	type = "ui",
-	child = {active = truen},
+	child = {active = true},
 	modes = {}
 })
 

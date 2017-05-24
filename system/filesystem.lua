@@ -38,12 +38,14 @@ filesystem.classToString = function(data)
 	for key , value in pairs( data ) do
 		if data[key] ~= _G[data.type][key] then
 			if rawtype(value) == "table" then
-				if value.save then
-					s = s..filesystem.keyToString(key).." = "..value:save()..","
-				elseif value.new then
-					s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
-				else
-					s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
+				if not table.empty( value ) then
+					if value.save then
+						s = s..filesystem.keyToString(key).." = "..value:save()..","
+					elseif value.new then
+						s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
+					else
+						s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
+					end
 				end
 			else
 				s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
@@ -57,12 +59,14 @@ filesystem.tableToString = function(data)
 	local s = "{"
 	for key , value in pairs( data ) do
 		if rawtype(value) == "table" then
-			if value.save then
-				s = s..filesystem.keyToString(key).." = "..value:save()..","
-			elseif value.new then
-				s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
-			else
-				s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
+			if not table.empty( value ) then
+				if value.save then
+					s = s..filesystem.keyToString(key).." = "..value:save()..","
+				elseif value.new then
+					s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
+				else
+					s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
+				end
 			end
 		end
 		s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
@@ -72,7 +76,8 @@ end
 
 filesystem.save = function(data,dir)
 	if not data.file then
-		local dir = data.type:sub(1,1)..filesystem.getIndex( (dir or filesystem.getClassFile(data) ) )
+		local fold = ( dir or filesystem.getClassFile(data) )
+		local dir = fold:sub(1,1)..filesystem.getIndex( fold )
 		data.file = dir
 	end
 	local t = "return "
