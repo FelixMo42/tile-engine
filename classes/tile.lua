@@ -4,12 +4,6 @@ tile = class:new({
 	walkable = true
 })
 
-function tile:open()
-	if self.object and not self.object.walkable then return false end
-	if self.item and not self.object.walkable then return false end
-	return self.walkable
-end
-
 function tile:load()
 	if self.object then
 		self:setObject(self.object)
@@ -35,6 +29,13 @@ function tile:draw(x,y,s)
 	if self.object then
 		self.object:draw(x,y,s)
 	end
+end
+
+function tile:open()
+	if self.object and not self.object.walkable then return false end
+	if self.item and not self.object.walkable then return false end
+	if self.player then return false end
+	return self.walkable
 end
 
 function tile:setObject(o)

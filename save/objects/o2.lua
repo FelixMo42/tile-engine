@@ -1,0 +1,1 @@
+return object:new({color = {[1] = 255,[2] = 255,[3] = 0},file = "o2",name = "lamp"})

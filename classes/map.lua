@@ -23,10 +23,13 @@ function map:load()
 	for x = 1 , self.width do
 		self.playerMap[x] = self.playerMap[x] or {}
 	end
-	for k , p in pairs(self.players) do
+	for k , p in ipairs(self.players) do
+		self[p.x][p.y].player = p
 		p.map = self
 		p.tile = self[p.x][p.y]
 		self.playerMap[p.x][p.y] = p
+		self.players[p] = p
+		self.players[k] = nil
 	end
 end
 
@@ -113,12 +116,35 @@ function map:setObject(o,sx,sy,ex,ey)
 	end
 end
 
+function map:setPlayer(p,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
+		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			self:addPlayer( p:new({x = x,y = y}) )
+		end
+	end
+end
+
+function map:deletPlayer(sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
+		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			if self.playerMap[x][y] then
+				self.players[self.playerMap[x][y]] = nil
+				self[x][y].player = nil
+				self.playerMap[x][y] = nil
+			end
+		end
+	end
+end
+
 function map:addPlayer(p)
 	p = p or player:new()
-	self.players[#self.players] = p
+	self.players[p] = p
 	p.map = self
 	p.tile = self[p.x][p.y]
 	self.playerMap[p.x][p.y] = p
+	self[p.x][p.y].player = p
 	return p
 end
 
@@ -150,6 +176,11 @@ function map:save()
 		end
 		s = s.."},\n"
 	end
+	s = s.."players = {"
+	for k , p in pairs(self.players) do
+		s = s.."npcs."..p.file..":new({x = "..p.x..",y = "..p.y.."}),"
+	end
+	s = s.."},\n"
 	s = s.."spawn = {x = "..self.spawn.x..",y = "..self.spawn.y.."}"
 	return s.."})"
 end

@@ -5,17 +5,15 @@ local function copy(table,l,t)
 	t = t or {}
 	local new = {}
 	for k , v in pairs(table) do
-		if type(v) == "table" then
-			if t[v] then
-				new[k] = t[v]
-			else
+		if rawtype(v) == "table" then
+			if not t[v] then
 				if l == 0 then
 					t[v] = v
 				else
 					t[v] = copy(v,l-1,t)
 				end
-				new[k] = t[v]
 			end
+			new[k] = t[v]
 		else
 			new[k] = v
 		end

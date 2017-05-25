@@ -15,7 +15,7 @@ npc_editor.ui:add( button:new({
 
 function npc_editor.open(p)
 	npc_editor.player = p
-	npc_editor.ui.name.text = p.name
+	npc_editor.ui.name.text = p.name or ""
 end
 
 function npc_editor.draw()

@@ -48,4 +48,5 @@ return map:new({width = 50,name = "test map",file = "m1",height = 50,{},
 {},
 {},
 {},
+players = {npcs.n1:new({x = 2,y = 10}),},
 spawn = {x = 10,y = 6}})

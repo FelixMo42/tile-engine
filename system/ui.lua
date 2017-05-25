@@ -73,7 +73,7 @@ function ui.child:is(var)
 				is = item[var] or is
 			end
 			if #(item.child or {}) > 0 and item.child.is then
-				is = item[var] or item.child:is(var)
+				is = item[var] or item.child:is(var) or is
 			end
 		end
 	end

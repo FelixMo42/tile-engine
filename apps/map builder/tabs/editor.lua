@@ -45,7 +45,7 @@ for i , o in ipairs( objects ) do
 	editor.ui.object.child.objects:addChild( button:new({
 		text = o.name, object = o, y = 20 * i, func = function(self)
 			editor.ui.object.child.objects.text = self.object.name
-			editor.selected = self.object
+			editor.selected = objects[self.object.name]
 		end
 	}) )
 end
@@ -70,9 +70,27 @@ editor.ui:add( ellement.menu:new({
 	func = function() editor.reset("players") end
 }) , "players" )
 
+editor.ui.players:addChild( ellement.menu:new({
+	text = "npc", b_over = 0 , bodyColor_over = color.grey
+}) , "npc" )
+
+for i , n in ipairs( npcs ) do
+	editor.ui.players.child.npc:addChild( button:new({
+		text = n.name, npc = n, y = 20 * i, func = function(self)
+			editor.selected = self.npc
+		end
+	}) )
+end
+
+--error - does not get clicked
+editor.ui.players:addChild( button:new({
+	text = "delet", b_over = 0 , bodyColor_over = color.grey,
+	func = function() editor.selected = "delet" end,x = 100
+}) , "delet")
+
 editor.ui.players:addChild( button:new({
 	text = "spawn", b_over = 0 , bodyColor_over = color.grey,
-	func = function() editor.selected = "spawn" end
+	func = function() editor.selected = "spawn" end,x = 200
 }) , "spawn")
 
 --options
@@ -105,6 +123,10 @@ local function onClick()
 		if editor.selected == "spawn" then
 			editor.map.spawn.x = mouse.tile.sx
 			editor.map.spawn.y = mouse.tile.sy
+		elseif editor.selected == "delet" then
+			editor.map:deletPlayer(mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
+		elseif editor.selected then
+			editor.map:setPlayer(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		end
 	end
 end
