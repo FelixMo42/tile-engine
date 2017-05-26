@@ -65,6 +65,24 @@ editor.ui:add( ellement.menu:new({
 	func = function() editor.reset("item") end
 }) , "item" )
 
+editor.ui.item:addChild( ellement.menu:new({
+	text = "items" , b_over = 0 , bodyColor_over = color.grey,
+}) , "items" )
+
+for i , o in ipairs( items ) do
+	editor.ui.item.child.items:addChild( button:new({
+		text = o.name, item = o, y = 20 * i, func = function(self)
+			editor.ui.item.child.items.text = self.item.name
+			editor.selected = self.item
+		end
+	}) )
+end
+
+editor.ui.item:addChild( ellement.menu:new({
+	text = "delet" , b_over = 0 , bodyColor_over = color.grey, x = 100,
+	func = function() editor.selected = "delet" end
+}) , "delet" )
+
 --players
 
 editor.ui:add( ellement.menu:new({
@@ -125,6 +143,12 @@ local function onClick()
 			editor.map:deletObject(mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		elseif editor.selected then
 			editor.map:setObject(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
+		end
+	elseif editor.mode == "item" then
+		if editor.selected == "delet" then
+			editor.map:deletItem(mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
+		elseif editor.selected then
+			editor.map:setItem(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		end
 	elseif editor.mode == "players" then
 		if editor.selected == "spawn" then

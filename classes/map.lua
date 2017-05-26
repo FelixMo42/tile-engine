@@ -116,6 +116,15 @@ function map:setObject(o,sx,sy,ex,ey)
 	end
 end
 
+function map:setItem(i,sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
+		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			self[x][y]:setItem( i:new() )
+		end
+	end
+end
+
 function map:setPlayer(p,sx,sy,ex,ey)
 	ex , ey = ex or sx , ey or sy
 	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
@@ -149,6 +158,17 @@ function map:deletObject(sx,sy,ex,ey)
 	end
 end
 
+function map:deletItem(sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
+		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			if self[x][y].item then
+				self[x][y].item = nil
+			end
+		end
+	end
+end
+
 function map:addPlayer(p)
 	p = p or player:new()
 	self.players[p] = p
@@ -161,6 +181,9 @@ end
 
 function map:saveTile(x,y)
 	local s = "tiles."..self[x][y].file..":new({"
+		if self[x][y].item then
+			s = s.."item = items."..self[x][y].item.file..","
+		end
 		if self[x][y].object then
 			s = s.."object = objects."..self[x][y].object.file
 		end
