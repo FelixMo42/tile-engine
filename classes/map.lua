@@ -138,6 +138,17 @@ function map:deletPlayer(sx,sy,ex,ey)
 	end
 end
 
+function map:deletObject(sx,sy,ex,ey)
+	ex , ey = ex or sx , ey or sy
+	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
+		for y = sy , ey , math.sign(ey - sy) == 0 and 1 or math.sign(ey - sy) do
+			if self[x][y].object then
+				self[x][y].object = nil
+			end
+		end
+	end
+end
+
 function map:addPlayer(p)
 	p = p or player:new()
 	self.players[p] = p

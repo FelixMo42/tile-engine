@@ -6,7 +6,7 @@ tile = class:new({
 
 function tile:load()
 	if self.object then
-		self:setObject(self.object)
+		self:setObject(self.object:new())
 	end
 end
 
@@ -26,8 +26,8 @@ function tile:draw(x,y,s)
 		self.object:draw(x,y,s)
 	end
 	--item
-	if self.object then
-		self.object:draw(x,y,s)
+	if self.item then
+		self.item:draw(x,y,s)
 	end
 end
 

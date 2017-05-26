@@ -5,7 +5,7 @@ local function copy(table,l,t)
 	t = t or {}
 	local new = {}
 	for k , v in pairs(table) do
-		if rawtype(v) == "table" then
+		if type(v) == "table" then
 			if not t[v] then
 				if l == 0 then
 					t[v] = v

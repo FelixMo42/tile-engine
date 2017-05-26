@@ -45,10 +45,15 @@ for i , o in ipairs( objects ) do
 	editor.ui.object.child.objects:addChild( button:new({
 		text = o.name, object = o, y = 20 * i, func = function(self)
 			editor.ui.object.child.objects.text = self.object.name
-			editor.selected = objects[self.object.name]
+			editor.selected = self.object
 		end
 	}) )
 end
+
+editor.ui.object:addChild( ellement.menu:new({
+	text = "delet" , b_over = 0 , bodyColor_over = color.grey, x = 100,
+	func = function() editor.selected = "delet" end
+}) , "delet" )
 
 --item
 
@@ -116,7 +121,9 @@ local function onClick()
 			editor.map:setTile(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		end
 	elseif editor.mode == "object" then
-		if editor.selected then
+		if editor.selected == "delet" then
+			editor.map:deletObject(mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
+		elseif editor.selected then
 			editor.map:setObject(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		end
 	elseif editor.mode == "players" then

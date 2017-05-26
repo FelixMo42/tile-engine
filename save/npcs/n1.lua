@@ -1,1 +1,1 @@
-return player:new({color = {[1] = 0,[2] = 0,[3] = 255},file = "n1",name = "Beta"})
+return player:new({color = {[1] = 169,[2] = 169,[3] = 169},name = "Beta",file = "n1"})

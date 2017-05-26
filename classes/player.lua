@@ -5,11 +5,12 @@ player = class:new({
 	path = {}
 })
 
-function player:draw()
-	local x = (self.x - self.map.x) * map_setting.scale
-	local y = (self.y - self.map.y - 1) * map_setting.scale
+function player:draw(x,y,s)
+	local x = x or (self.x - self.map.x) * map_setting.scale
+	local y = y or (self.y - self.map.y - 1) * map_setting.scale
+	local s = s or map_setting.scale
 	love.graphics.setColor(self.color)
-	love.graphics.rectangle("fill" , x , y , map_setting.scale , 2 * map_setting.scale )
+	love.graphics.rectangle("fill" , x , y , s , 2 * s )
 end
 
 function player:goTo(x,y)

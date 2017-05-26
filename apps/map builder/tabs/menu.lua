@@ -132,7 +132,7 @@ menu.ui.new_map:addChild( button:new({
 	x = var:new(function(self) return screen.width - 25 end)
 }) , "height_plus" )
 
---save(not!) and open
+--save and open
 
 menu.ui.new_map:addChild( button:new({
 	text = "save and open", func = function() return menu.new() end,
