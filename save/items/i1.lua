@@ -1,0 +1,1 @@
+return item:new({color = {[1] = 10,[2] = 50,[3] = 0},name = "book",file = "i1"})

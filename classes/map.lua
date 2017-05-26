@@ -39,14 +39,14 @@ function map:draw()
 	ex = math.min( math.floor( self.x + screen.width / map_setting.scale ) , self.width)
 	sy = math.max( math.floor(self.y) , 1 ) 
 	ey = math.min( math.floor( self.y + screen.height / map_setting.scale ) , self.height)
-	for x = sx , ex do
-		for y = sy , ey do
+	for y = sy , ey do
+		for x = sx , ex do
 			self[x][y]:draw()
 		end
 	end
 	--players
-	for x = sx , ex do
-		for y = sy , ey do
+	for y = sy , ey do
+		for x = sx , ex do
 			if self.playerMap[x][y] then
 				self.playerMap[x][y]:draw()
 			end

@@ -14,7 +14,14 @@ function player:draw(x,y,s)
 end
 
 function player:goTo(x,y)
-	self.path = pathfinder:path(self.map , math.floor(self.x),math.floor(self.y) , x,y)
+	local path = pathfinder:path(self.map , math.floor(self.x),math.floor(self.y) , x,y)
+	if #self.path == 0 then
+		self.path = path
+	else
+		for i = 1 , math.max(#path , #self.path) do
+			self.path[i + 1] = path[i]
+		end
+	end
 end
 
 function player:update(dt)
