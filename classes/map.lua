@@ -179,14 +179,18 @@ function map:addPlayer(p)
 	return p
 end
 
-function map:saveTile(x,y)
-	local s = "tiles."..self[x][y].file..":new({"
-		if self[x][y].item then
-			s = s.."item = items."..self[x][y].item.file..","
-		end
-		if self[x][y].object then
-			s = s.."object = objects."..self[x][y].object.file
-		end
+function map:saveTile(x,y,s)
+	if self[x][y].file then
+		s = "tiles."..self[x][y].file..":new({"
+	else
+		s = "tile:new({"
+	end
+	if self[x][y].item then
+		s = s.."item = items."..self[x][y].item.file..","
+	end
+	if self[x][y].object then
+		s = s.."object = objects."..self[x][y].object.file
+	end
 	return s.."}),"
 end
 
@@ -204,7 +208,7 @@ function map:save()
 	for x = 1 , self.width do
 		s = s.."{"
 		for y = 1 , self.height do
-			if self[x][y].file then
+			if self[x][y].file or self[x][y].item or self[x][y].object then
 				s = s.."["..y.."] = "..self:saveTile(x,y)
 			end
 		end

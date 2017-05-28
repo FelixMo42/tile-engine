@@ -2,7 +2,8 @@ player = class:new({
 	type = "player",
 	x = 1, y = 1,
 	color = color.blue,
-	path = {}
+	path = {},
+	inventory = {}
 })
 
 function player:draw(x,y,s)
@@ -43,6 +44,9 @@ function player:setPos(x,y)
 	self.x , self.y = x , y
 	self.tile = self.map[x][y]
 	self.map.playerMap[x][y] = self
+	if self.tile.item then
+		self.tile.item:pickUp( self )
+	end
 end
 
 npcs = {}
