@@ -5,15 +5,25 @@ game.world:add( {} , "map" )
 mouse.tile = {}
 game.player = player:new()
 
+--ui
+
+game.world:add( button:new({
+	text = "inventory", b_over = 0, bodyColor_over = color.grey,
+	x = var:new( function() return screen.width - 100 end ),
+	func = function() love.open( inventory ) end
+}) , 2 , "save")
+
 --functions
 
 function game.open(map)
-	game.map = map
-	game.world.map = map
-	game.world[1] = map
-	game.player.x = map.spawn.x
-	game.player.y = map.spawn.y
-	map:addPlayer( game.player )
+	if map then
+		game.map = map
+		game.world.map = map
+		game.world[1] = map
+		game.player.x = map.spawn.x
+		game.player.y = map.spawn.y
+		map:addPlayer( game.player )
+	end
 end
 
 function game.update()
@@ -30,6 +40,8 @@ function game.mousemoved(x,y,dx,dy)
 end
 
 function game.mousepressed(x,y)
-	local x , y = math.floor(mouse.tile.sx) , math.floor(mouse.tile.sy)
-	game.player:goTo(x , y)
+	if not mouse.used then
+		local x , y = math.floor(mouse.tile.sx) , math.floor(mouse.tile.sy)
+		game.player:goTo(x , y)
+	end
 end

@@ -105,7 +105,6 @@ for i , n in ipairs( npcs ) do
 	}) )
 end
 
---error - does not get clicked
 editor.ui.players:addChild( button:new({
 	text = "delet", b_over = 0 , bodyColor_over = color.grey,
 	func = function() editor.selected = "delet" end,x = 100

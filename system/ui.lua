@@ -90,6 +90,14 @@ function ui.child:get(var)
 	return unpack(vars)
 end
 
+function ui.child:clear(new)
+	for k , v in pairs(self) do
+		if type(v) ~= "function" then
+			self[k] = nil
+		end
+	end
+end
+
 package.preload["ui"] = function() return ui end
 
 return ui

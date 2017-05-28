@@ -9,7 +9,11 @@ ellement.menu = button:new({
 ellement.menu.child.active = false
 
 ellement.menu:addCallback("mousereleased","open",function(self)
-	self.child.active = self.over or self.child:is("over")
+	if self.child.is then
+		self.child.active = self.over or self.child:is("over")
+	else
+		self.child.active = self.over
+	end
 end)
 
 --textbox

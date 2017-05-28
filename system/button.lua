@@ -8,7 +8,6 @@ local button = require("ui"):new({
 	getmode = "norm",
 	over = false,
 	pressed = false,
-	b = 0,
 	b_over = 4,
 	modes = {
 		"pressed",
