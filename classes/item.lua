@@ -16,4 +16,17 @@ function item:pickUp(p)
 	p.inventory[#p.inventory + 1] = self
 end
 
+function item:drop()
+	if self.player.tile then return false end
+	for k , item in pairs(self.player.inventory) do
+		if type(k) == "number" and item == self then
+			table.remove(self.player.inventory,k)
+		elseif item == self then
+			self.player.inventory[k] = nil
+		end
+	end
+	self.player.tile:setItem(self)
+	return true
+end
+
 items = {}

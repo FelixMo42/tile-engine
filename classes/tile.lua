@@ -50,6 +50,7 @@ function tile:setItem(i)
 	i.map = self.map
 	i.tile = self
 	self.item = i
+	i.player = nil
 end
 
 tiles = {}
