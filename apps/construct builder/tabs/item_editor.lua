@@ -58,6 +58,18 @@ item_editor.ui:add( ellement.textbox:new({
 	end
 }) , "blue" )
 
+item_editor.ui:add( ellement.textbox:new({
+	x = 5, startText = "equipe slot: ", y = 80,
+	width = var:new(function() return screen.width / 2 - 10 end),
+	onEdit = function(self)
+		if #self.text > 0 then
+			item_editor.item.slot = self.text
+		else
+			item_editor.item.slot = item.slot
+		end
+	end
+}) , "slot" )
+
 --functions
 
 function item_editor.open(t)
@@ -67,6 +79,7 @@ function item_editor.open(t)
 	item_editor.ui.red.text = tostring( item_editor.item.color[1] )
 	item_editor.ui.green.text = tostring( item_editor.item.color[2] )
 	item_editor.ui.blue.text = tostring( item_editor.item.color[3] )
+	item_editor.ui.slot.text = item_editor.item.name or item.slot
 end
 
 function item_editor.draw()

@@ -28,9 +28,12 @@ function setUpInventory()
 	inventory.ui.inventory.child:clear()
 	for i , item in ipairs(game.player.inventory) do
 		inventory.ui.inventory:addChild( button:new({
-			textMode = "left", text = " "..item.name , x = 25, y = i * 25 + 20,
+			textMode = "left" , x = 25, y = i * 25 + 20, text = " "..item.name,
 			width = var:new( function() return screen.width - 157 end ), item = item
-		}) )
+		}) , "item_"..i )
+		if item.equiped then
+			inventory.ui.inventory.child["item_"..i].text = " "..item.name.." - "..item.slot
+		end
 		inventory.ui.inventory:addChild( button:new({
 			func = function(self)
 				self.item:drop()
@@ -40,7 +43,11 @@ function setUpInventory()
 			x = var:new( function() return screen.width - 127 end ), y = i * 25 + 20,
 		}) )
 		inventory.ui.inventory:addChild( button:new({
-			text = "use" , width = 50 , item = item ,
+			func = function(self)
+				self.item:use()
+				setUpInventory()
+				inventory.ui.inventory.child.active = true
+			end, text = "use" , width = 50 , item = item ,
 			x = var:new( function() return screen.width - 102 end ), y = i * 25 + 20,
 		}) )
 		inventory.ui.inventory:addChild( button:new({
@@ -48,7 +55,7 @@ function setUpInventory()
 			x = var:new( function() return screen.width - 47 end ), y = i * 25 + 20,
 		}) )
 	end
-	inventory.ui.inventory:addChild( button:new({width = 1000,height = 1000,draw = {}}) , "bg" )
+	inventory.ui.inventory:addChild(button:new({width = 1000,height = 1000,draw = {}}),"bg")
 end
 
 function inventory.open(t)

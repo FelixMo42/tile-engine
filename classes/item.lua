@@ -1,6 +1,8 @@
 item = class:new({
 	type = "item",
-	color = color.brown
+	slot = "usable",
+	color = color.brown,
+	equiped = false
 })
 
 function item:draw(x,y,s)
@@ -17,7 +19,7 @@ function item:pickUp(p)
 end
 
 function item:drop()
-	if self.player.tile then return false end
+	if self.player.tile.item then return false end
 	for k , item in pairs(self.player.inventory) do
 		if type(k) == "number" and item == self then
 			table.remove(self.player.inventory,k)
@@ -27,6 +29,15 @@ function item:drop()
 	end
 	self.player.tile:setItem(self)
 	return true
+end
+
+function item:use()
+	if self.player.inventory[self.slot] then
+		self.player.inventory[self.slot].equiped = false
+		self.player.inventory[self.slot] = nil
+	end
+	self.equiped = true
+	self.player.inventory[self.slot] = self
 end
 
 items = {}
