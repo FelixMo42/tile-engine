@@ -92,7 +92,7 @@ end
 
 function ui.child:clear(new)
 	for k , v in pairs(self) do
-		if type(v) ~= "function" then
+		if rawtype(v) == "table" then
 			self[k] = nil
 		end
 	end

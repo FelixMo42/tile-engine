@@ -9,4 +9,8 @@ function object:draw(x,y,s)
 	love.graphics.rectangle("fill",x,y,s,s)
 end
 
+function object:getActions()
+	return {}
+end
+
 objects = {}

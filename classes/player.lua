@@ -49,6 +49,10 @@ function player:setPos(x,y)
 	end
 end
 
+function player:getActions()
+	return {}
+end
+
 npcs = {}
 
 player_setting = {speed = 5 , file = "npcs"}

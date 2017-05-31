@@ -53,4 +53,32 @@ function tile:setItem(i)
 	i.player = nil
 end
 
+function tile:getActions()
+	local actions = {}
+	actions["go to"] = function() game.player:goTo(self.x , self.y) end
+	--tile
+	for k , v in pairs( actions ) do
+		actions[k] = lambda:new(v , self)
+	end
+	--item
+	if self.item then
+		for k , v in pairs( self.item:getActions() ) do
+			actions[k] = lambda:new(v , self.item)
+		end
+	end
+	--object
+	if self.object then
+		for k , v in pairs( self.object:getActions() ) do
+			actions[k] = lambda:new(v , self.object)
+		end
+	end
+	--players
+	if self.player then
+		for k , v in pairs( self.player:getActions() ) do
+			actions[k] = lambda:new(v , self.player)
+		end
+	end
+	return actions
+end
+
 tiles = {}

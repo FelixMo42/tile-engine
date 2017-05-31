@@ -40,4 +40,10 @@ function item:use()
 	self.player.inventory[self.slot] = self
 end
 
+function item:getActions()
+	return {
+		["pick up"] = function(self) self:pickUp( game.player )  end
+	}
+end
+
 items = {}

@@ -11,7 +11,9 @@ game.world:add( button:new({
 	text = "inventory", b_over = 0, bodyColor_over = color.grey,
 	x = var:new( function() return screen.width - 100 end ),
 	func = function() love.open( inventory ) end
-}) , 2 , "save")
+}) , "save")
+
+game.world:add( ui:new({x = 0 , y = 0}) , "actions")
 
 --functions
 
@@ -40,8 +42,27 @@ function game.mousemoved(x,y,dx,dy)
 end
 
 function game.mousepressed(x,y)
-	if not mouse.used then
+	if mouse.used then return end
+	if mouse.button == 1 then
 		local x , y = math.floor(mouse.tile.sx) , math.floor(mouse.tile.sy)
 		game.player:goTo(x , y)
+	elseif mouse.button == 2 then
+		game.world.actions.child:clear()
+		local actions = game.map[mouse.tile.sx][mouse.tile.sy]:getActions()
+		local i = 1
+		local x = (mouse.tile.sx - game.map.x + .9) * map_setting.scale
+		local y = (mouse.tile.sy - game.map.y + .5) * map_setting.scale
+		for k , v in pairs(actions) do
+			game.world.actions:addChild( button:new({
+				text = k, x = x, y = y - i * 20 + table.count(actions) * 10,
+				b_over = 0, bodyColor_over = color.grey, func = v
+			}) )
+			i = i + 1
+		end
+		game.world.actions:addChild( ui:new() , "delet" )
+		local f = lambda:new(game.world.actions.child.clear , game.world.actions.child)
+		game.world.actions.child.delet:addCallback( "mousereleased" , "clear" , function()
+			game.world.actions.child.delet.mousereleased.clear = f
+		end )
 	end
 end
