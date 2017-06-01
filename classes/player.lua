@@ -3,6 +3,7 @@ player = class:new({
 	x = 1, y = 1,
 	color = color.blue,
 	path = {},
+	dialog = {text = "hello"},
 	inventory = {}
 })
 
@@ -50,9 +51,16 @@ function player:setPos(x,y)
 end
 
 function player:getActions()
-	return {}
+	local actions = {}
+	actions["talk"] = function() love.open(talk , self) end
+	return actions
 end
 
 npcs = {}
 
 player_setting = {speed = 5 , file = "npcs"}
+
+player.dialog = {
+	text = "hello",
+	["how are you doing"] = {}
+}
