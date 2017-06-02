@@ -15,7 +15,7 @@ function player:draw(x,y,s)
 	love.graphics.rectangle("fill" , x , y , s , 2 * s )
 end
 
-function player:goTo(x,y)
+function player:goTo(x,y,f)
 	local path = pathfinder:path(self.map , math.floor(self.x),math.floor(self.y) , x,y)
 	if #self.path == 0 then
 		self.path = path
@@ -24,10 +24,16 @@ function player:goTo(x,y)
 			self.path[i + 1] = path[i]
 		end
 	end
+	if f then self.path[#self.path + 1] = f end
 end
 
 function player:update(dt)
-	if #self.path > 0 then
+	if #self.path == 0 then return end
+	if type(self.path[1]) == "function" then
+		self.path[1](self)
+		self.path[1] = nil
+		return self:update(dt)
+	else
 		local d = 1 / math.sqrt( (self.path[1].x - self.tile.x) ^ 2 + (self.path[1].y - self.tile.y) ^ 2 )
 		self.x = self.x + ( (self.path[1].x - self.tile.x) * dt * player_setting.speed * d )
 		self.y = self.y + ( (self.path[1].y - self.tile.y) * dt * player_setting.speed * d )
@@ -35,7 +41,7 @@ function player:update(dt)
 		local cy = math.abs(self.y - self.tile.y) >= math.abs(self.path[1].y - self.tile.y)
 		if cx and cy then
 			self:setPos(self.path[1].x, self.path[1].y)
-			table.remove( self.path , 1 )
+			table.remove(self.path , 1)
 		end
 	end
 end
@@ -61,6 +67,10 @@ npcs = {}
 player_setting = {speed = 5 , file = "npcs"}
 
 player.dialog = {
-	text = "hello",
-	["how are you doing"] = {}
+	text = "Hello!",
+	["How are you doing?"] = {
+		text = "Thaks I'am doing good.\nHow about you?",
+		["I'm good."] = {text = "nice"},
+		["I'm not doing good."] = {text = "to bad"}
+	}
 }

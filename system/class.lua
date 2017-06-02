@@ -50,6 +50,9 @@ setmetatable(class , {
 		for k , v in pairs(table or {}) do
 			self[k] = v
 		end
+	end,
+	__type = function(self)
+		return self.type or "table"
 	end
 })
 
@@ -87,6 +90,9 @@ getter.new = function() return function(orig, ...)
 		end,
 		__copy = function(self)
 			return getmetatable(self).__copy(self)
+		end,
+		__type = function(self)
+			return getmetatable(self).__type(self)
 		end,
 		__new = function(self,new)
 			return getmetatable(self).__new(self,new)

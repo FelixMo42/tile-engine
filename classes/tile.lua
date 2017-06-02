@@ -55,7 +55,7 @@ end
 
 function tile:getActions()
 	local actions = {}
-	actions["go to"] = function() game.player:goTo(self.x , self.y) end
+	actions["go to"] = function() end
 	--tile
 	for k , v in pairs( actions ) do
 		actions[k] = lambda:new(v , self)

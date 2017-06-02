@@ -55,7 +55,10 @@ function game.mousepressed(x,y)
 		for k , v in pairs(actions) do
 			game.world.actions:addChild( button:new({
 				text = k, x = x, y = y - i * 20 + table.count(actions) * 10,
-				b_over = 0, bodyColor_over = color.grey, func = v
+				tx = mouse.tile.sx, ty = mouse.tile.sy, f = v,
+				b_over = 0, bodyColor_over = color.grey, func = function(self)
+					game.player:goTo(self.tx , self.ty , self.f)
+				end
 			}) )
 			i = i + 1
 		end

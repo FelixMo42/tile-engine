@@ -34,7 +34,7 @@ function pathfinder:neighbours(node , tx , ty , map)
 	return n
 end
 
-function pathfinder:calc(open , closed , x , y)
+function pathfinder:calc(open , closed , x , y , map)
 	if not get(closed , x , y) then return {} , closed , open end
 	local path = { get(closed , x , y) }
 	while path[#path].p do
@@ -43,6 +43,9 @@ function pathfinder:calc(open , closed , x , y)
 	local new = {}
 	for i = #path - 1 , 1 , -1 do
 		new[#path - i] = self.map[ path[i].x ][ path[i].y ]
+	end
+	if not map[x][y]:open() then
+		new[#new] = nil
 	end
 	return new , closed , open
 end
@@ -71,13 +74,13 @@ function pathfinder:path(map , sx,sy , ex,ey)
 		--cheak neighbours
 		local n = self:neighbours(current , ex , ey , map)
 		for i = 1 , #n do
-			if self.map[n[i].x][n[i].y]:open() and not get(closed , n[i].x , n[i].y) then
+			if (self.map[n[i].x][n[i].y]:open() or (n[i].x == ex and n[i].y == ey)) and not get(closed , n[i].x , n[i].y) then
 				add(open , n[i])
 			end
 		end
 		current = nil
 	end
-	return pathfinder:calc(open , closed , ex , ey) --get path
+	return pathfinder:calc(open , closed , ex , ey , map)
 end
 
 class = require "system/class"
