@@ -21,16 +21,16 @@ end
 
 filesystem.toString = function(data)
 	if type(data) == "string" then
-		return '"'..tostring(data)..'"'
+		return ('"'..tostring(data)..'"'):gsub("\n", "\\n")
 	end
 	return tostring(data)
 end
 
 filesystem.keyToString = function(data)
-	if type(data) == "number" then
-		return '['..tostring(data)..']'
+	if type(data) == "string" then
+		return ('["'..tostring(data)..'"]')
 	end
-	return tostring(data)
+	return "["..tostring(data).."]"
 end
 
 filesystem.classToString = function(data)
@@ -68,8 +68,9 @@ filesystem.tableToString = function(data)
 					s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
 				end
 			end
+		else
+			s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
 		end
-		s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
 	end
 	return s:sub(1,-2).."}"
 end

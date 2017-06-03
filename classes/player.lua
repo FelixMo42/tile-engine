@@ -65,12 +65,3 @@ end
 npcs = {}
 
 player_setting = {speed = 5 , file = "npcs"}
-
-player.dialog = {
-	text = "Hello!",
-	["How are you doing?"] = {
-		text = "Thaks I'am doing good.\nHow about you?",
-		["I'm good."] = {text = "nice"},
-		["I'm not doing good."] = {text = "to bad"}
-	}
-}
