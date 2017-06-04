@@ -1,5 +1,8 @@
 skill = class:new({
-	type = "skill"
+	type = "skill",
+	name = "",
+	level = 0,
+	stat = "str"
 })
 
 skills = {}

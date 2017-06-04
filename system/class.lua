@@ -68,8 +68,6 @@ getter.new = function() return function(orig, ...)
 		__call = function(self,...)
 			if mt.__call then
 				return mt.__call(self,...)
-			else
-				love.errhand("table not callable")
 			end
 		end,
 		__index = function(self,key)

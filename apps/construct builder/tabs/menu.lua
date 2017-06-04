@@ -15,7 +15,7 @@ local function tile_setup()
 			func = function(self) love.open(tile_editor,self.tile) end
 		}) , "tile_"..i )
 		menu.ui.tile.child.tiles:addChild(button:new({
-			text = "delet", y = 10 + 25 * i, tile = t, i = i,
+			text = "delete", y = 10 + 25 * i, tile = t, i = i,
 			x = var:new(function() return screen.width / 4 * 3 + 5 end),
 			width = var:new(function() return screen.width / 4 - 10 end),
 			func = function(self)
@@ -26,7 +26,7 @@ local function tile_setup()
 				tiles[ self.i ] = nil
 				tile_setup()
 			end
-		}) , "tile_"..i.."_delet" )
+		}) , "tile_"..i.."_delete" )
 	end
 end
 

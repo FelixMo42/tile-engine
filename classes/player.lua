@@ -4,7 +4,13 @@ player = class:new({
 	color = color.blue,
 	path = {},
 	dialog = {text = "hello"},
-	inventory = {}
+	inventory = {},
+	states = {
+		int = 0, will = 0, chr = 0,
+		str = 0, con = 0, dex = 0,
+	},
+	skills = {},
+	abilites = {}
 })
 
 function player:draw(x,y,s)

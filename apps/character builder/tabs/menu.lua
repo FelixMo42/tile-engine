@@ -23,7 +23,7 @@ local function npc_setup()
 			func = function(self) love.open(npc_editor,self.npc) end
 		}) , "npc_"..i )
 		menu.ui.npc.child.npcs:addChild( button:new({
-			text = "delet", y = 10 + 25 * i, npc = t, i = i,
+			text = "delete", y = 10 + 25 * i, npc = t, i = i,
 			x = var:new(function() return screen.width / 8 * 3 + 5 end),
 			width = var:new(function() return screen.width / 8 - 10 end),
 			func = function(self)
@@ -34,7 +34,7 @@ local function npc_setup()
 				npcs[ self.i ] = nil
 				npc_setup()
 			end
-		}) , "npc_"..i.."_delet" )
+		}) , "npc_"..i.."_delete" )
 	end
 end
 
