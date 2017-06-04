@@ -4,13 +4,14 @@ player = class:new({
 	color = color.blue,
 	path = {},
 	dialog = {text = "hello"},
+	hp = 100,
 	inventory = {},
 	states = {
 		int = 0, will = 0, chr = 0,
 		str = 0, con = 0, dex = 0,
 	},
 	skills = {},
-	abilites = {}
+	abilities = {}
 })
 
 function player:draw(x,y,s)
@@ -66,6 +67,24 @@ function player:getActions()
 	local actions = {}
 	actions["talk"] = function() love.open(talk , self) end
 	return actions
+end
+
+function player:addAbility(a)
+	if a.folder then
+		if not self.abilities[a.folder] then
+			self.abilities[a.folder] = {}
+		end
+		self.abilities[a.folder][a.name] = a
+	else
+		self.abilities[a.name] = a
+	end
+end
+
+function player:addHp(a)
+	self.hp = self.hp + a
+	if self.hp <= 0 then
+		self.map:deletPlayer( self.x , self.y )
+	end
 end
 
 npcs = {}

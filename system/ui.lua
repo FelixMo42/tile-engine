@@ -45,6 +45,7 @@ function ui:addChild(c,i,n)
 	i = i or #self.child + 1
 	c.parent = self
 	table.insert(self.child , i , c)
+	return c
 end
 
 function ui:addCallback(list,name,func,i)

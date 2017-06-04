@@ -3,3 +3,5 @@ ability = class:new({
 })
 
 abilities = {}
+
+ability_setting = {file = "abilities"}

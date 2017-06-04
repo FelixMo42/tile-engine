@@ -1,0 +1,1 @@
+return ability:new({name = "move",folder = "tactical",file = "a1",func = function(p,x,y) p:goTo(x,y) end})

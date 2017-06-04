@@ -4,8 +4,13 @@ tabs.game:addLayer("world" , 1)
 game.world:add( {} , "map" )
 mouse.tile = {}
 game.player = player:new()
+game.player:addAbility( abilities.move )
+game.player:addAbility( abilities.attack )
+game.ability = abilities.move
 
 --ui
+
+game.world:add( ui:new({x = 0 , y = 0}) , "actions")
 
 game.world:add( button:new({
 	text = "inventory", b_over = 0, bodyColor_over = color.grey,
@@ -13,7 +18,32 @@ game.world:add( button:new({
 	func = function() love.open( inventory ) end
 }) , "save")
 
-game.world:add( ui:new({x = 0 , y = 0}) , "actions")
+game.world:add( ellement.menu:new({
+	text = "moves", b_over = 0, bodyColor_over = color.grey
+}) , "move" )
+
+local function moves_setup(ui , abilities , x)
+	local y = 20
+	for k , v in pairs(abilities) do
+		if type(v) == "table" then
+			local t = ui:addChild( ellement.menu:new({
+				b_over = 0, bodyColor_over = color.grey,
+				x = x, y = y, text = k
+			}) )
+			moves_setup(t , v , x + 100)
+		else
+			ui:addChild( button:new({
+				b_over = 0, bodyColor_over = color.grey, a = v,
+				x = x, y = y, text = v.name,func = function(self)
+					game.ability = self.a
+				end
+			}) )
+		end
+		y = y + 20
+	end
+end
+
+moves_setup( game.world.move , game.player.abilities , 0)
 
 --functions
 
@@ -45,7 +75,7 @@ function game.mousepressed(x,y)
 	if mouse.used then return end
 	if mouse.button == 1 then
 		local x , y = math.floor(mouse.tile.sx) , math.floor(mouse.tile.sy)
-		game.player:goTo(x , y)
+		game.ability.func(game.player , x , y)
 	elseif mouse.button == 2 then
 		game.world.actions.child:clear()
 		local actions = game.map[mouse.tile.sx][mouse.tile.sy]:getActions()

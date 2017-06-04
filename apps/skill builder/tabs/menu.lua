@@ -1,9 +1,15 @@
 --abilites
 
 menu.ui:add( ellement.menu:new({
-	y = 5, x = 5, text = "abilites",
+	y = 5, x = 5, text = "abilities",
 	width = var:new( function() return screen.width / 2 - 7.5 end )
-}) , "abilites")
+}) , "ability")
+
+menu.ui.ability:addChild( button:new({
+	x = 5, width = var:new( function() return screen.width - 10 end ),
+	y = var:new( function() return screen.height - 25 end ), text = "new skill",
+	func = function() love.open( ability_editor ) end
+}) , "new" )
 
 --skills
 
