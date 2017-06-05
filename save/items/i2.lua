@@ -1,1 +1,1 @@
-return item:new({color = {[1] = 100,[2] = 100,[3] = 100},slot = "primary",file = "i2",name = "sword"})
+return item:new({["max"] = 10,["color"] = {[1] = 100,[2] = 100,[3] = 100},["file"] = "i2",["name"] = "sword",["slot"] = "primary"})

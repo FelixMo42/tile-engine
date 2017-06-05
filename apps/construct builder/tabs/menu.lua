@@ -55,7 +55,7 @@ local function object_setup()
 		menu.ui.object.child.objects:addChild(button:new({
 			text = "  "..t.name, y = 10 + 25 * i, x = 5, textMode = "left", object = t,
 			width = var:new(function() return screen.width / 4 * 3 - 5 end),
-			func = function(self) love.open(tile_editor,self.object) end
+			func = function(self) love.open(object_editor,self.object) end
 		}) , "tile_"..i )
 		menu.ui.object.child.objects:addChild(button:new({
 			text = "delet", y = 10 + 25 * i, object = t, i = i,
@@ -98,7 +98,7 @@ local function item_setup()
 		menu.ui.item.child.items:addChild(button:new({
 			text = "  "..t.name, y = 10 + 25 * i, x = 5, textMode = "left", item = t,
 			width = var:new(function() return screen.width / 4 * 3 - 5 end),
-			func = function(self) love.open(tile_editor,self.item) end
+			func = function(self) love.open(item_editor,self.item) end
 		}) , "items_"..i )
 		menu.ui.item.child.items:addChild(button:new({
 			text = "delet", y = 10 + 25 * i, item = t, i = i,

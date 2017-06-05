@@ -7,6 +7,7 @@ game.player = player:new()
 game.player:addAbility( abilities.move )
 game.player:addAbility( abilities.attack )
 game.ability = abilities.move
+game.initiative = {game.player}
 
 --ui
 
@@ -16,7 +17,7 @@ game.world:add( button:new({
 	text = "inventory", b_over = 0, bodyColor_over = color.grey,
 	x = var:new( function() return screen.width - 100 end ),
 	func = function() love.open( inventory ) end
-}) , "save")
+}) , "inventory")
 
 game.world:add( ellement.menu:new({
 	text = "moves", b_over = 0, bodyColor_over = color.grey
@@ -43,7 +44,27 @@ local function moves_setup(ui , abilities , x)
 	end
 end
 
-moves_setup( game.world.move , game.player.abilities , 0)
+moves_setup( game.world.move , game.player.abilities , 0 )
+
+game.world:add( ellement.menu:new({
+	text = "info", b_over = 0, bodyColor_over = color.grey, x = 100
+}) , "info" )
+
+game.world.info:addChild( button:new({
+	b_over = 0, bodyColor_over = color.grey, x = 100, y = 20
+}) , "hp" )
+
+game.world.info.child.hp:addCallback( "draw" , "setText" , function(self)
+	self.text = "HP: "..game.player.hp
+end )
+
+game.world.info:addChild( button:new({
+	b_over = 0, bodyColor_over = color.grey, x = 100, y = 40
+}) , "mana" )
+
+game.world.info.child.mana:addCallback( "draw" , "setText" , function(self)
+	self.text = "Mana: "..game.player.mana
+end )
 
 --functions
 
@@ -75,7 +96,7 @@ function game.mousepressed(x,y)
 	if mouse.used then return end
 	if mouse.button == 1 then
 		local x , y = math.floor(mouse.tile.sx) , math.floor(mouse.tile.sy)
-		game.ability.func(game.player , x , y)
+		game.ability(x , y)
 	elseif mouse.button == 2 then
 		game.world.actions.child:clear()
 		local actions = game.map[mouse.tile.sx][mouse.tile.sy]:getActions()

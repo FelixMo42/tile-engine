@@ -70,6 +70,30 @@ item_editor.ui:add( ellement.textbox:new({
 	end
 }) , "slot" )
 
+item_editor.ui:add( ellement.textbox:new({
+	x = 5, startText = "max damage: ", y = 105, filter = "0123456789",
+	width = var:new(function() return screen.width / 2 - 10 end),
+	onEdit = function(self)
+		if #self.text > 0 then
+			item_editor.item.max = tonumber(self.text)
+		else
+			item_editor.item.max = 0
+		end
+	end
+}) , "max" )
+
+item_editor.ui:add( ellement.textbox:new({
+	x = 5, startText = "min damage: ", y = 130, filter = "0123456789",
+	width = var:new(function() return screen.width / 2 - 10 end),
+	onEdit = function(self)
+		if #self.text > 0 then
+			item_editor.item.min = tonumber(self.text)
+		else
+			item_editor.item.min = 0
+		end
+	end
+}) , "min" )
+
 --functions
 
 function item_editor.open(t)
@@ -79,7 +103,9 @@ function item_editor.open(t)
 	item_editor.ui.red.text = tostring( item_editor.item.color[1] )
 	item_editor.ui.green.text = tostring( item_editor.item.color[2] )
 	item_editor.ui.blue.text = tostring( item_editor.item.color[3] )
-	item_editor.ui.slot.text = item_editor.item.name or item.slot
+	item_editor.ui.slot.text = item_editor.item.slot
+	item_editor.ui.max.text = tostring(item_editor.item.max)
+	item_editor.ui.min.text = tostring(item_editor.item.min)
 end
 
 function item_editor.draw()

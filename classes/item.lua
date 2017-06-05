@@ -2,6 +2,7 @@ item = class:new({
 	type = "item",
 	slot = "usable",
 	color = color.brown,
+	max = 2, min = 0,
 	equiped = false
 })
 
@@ -44,6 +45,10 @@ function item:getActions()
 	return {
 		["pick up"] = function(self) self:pickUp( game.player )  end
 	}
+end
+
+function item:damage()
+	return math.random(self.min,self.max)
 end
 
 items = {}

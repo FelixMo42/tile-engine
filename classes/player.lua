@@ -5,6 +5,7 @@ player = class:new({
 	path = {},
 	dialog = {text = "hello"},
 	hp = 100,
+	mana = 100,
 	inventory = {},
 	states = {
 		int = 0, will = 0, chr = 0,
@@ -70,6 +71,7 @@ function player:getActions()
 end
 
 function player:addAbility(a)
+	a.player = self
 	if a.folder then
 		if not self.abilities[a.folder] then
 			self.abilities[a.folder] = {}

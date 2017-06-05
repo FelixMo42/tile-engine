@@ -1,1 +1,1 @@
-return ability:new({name = "move",folder = "tactical",file = "a1",func = function(p,x,y) p:goTo(x,y) end})
+return ability:new({name = "move",folder = "tactical",file = "a1",range = -1,func = function(self,x,y) self.player:goTo(x,y) end})

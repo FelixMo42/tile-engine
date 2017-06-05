@@ -2,7 +2,7 @@ local pathfinder = class:new({
 	type = "pathfinder"
 })
 
---local functions
+--local micro-functions
 
 local function add(l,t) l[t.x.."_"..t.y] = t end
 
@@ -10,17 +10,17 @@ local function get(l,x,y) return l[x.."_"..y] or false end
 
 local function remove(l,x,y) l[x.."_"..y] = nil end
 
+--local functions
+
 local function dist(sx,sy , ex,ey)
 	return math.floor(math.sqrt((sx-ex)^2+(sy-ey)^2)*10)
 end
 
---functions
-
-function pathfinder:neighbours(node , tx , ty , map)
+local function neighbours(node , tx , ty , map)
 	local n = {}
 	for x = node.x - 1 , node.x + 1 do
 		for y = node.y - 1 , node.y + 1 do
-			if self.map[x][y] then
+			if map[x][y] then
 				if (x == node.x and y ~= node.y) or (x ~= node.x and y == node.y) then
 					n[#n + 1] = {x = x , y = y}
 					n[#n].s = node.s + 10
@@ -34,7 +34,7 @@ function pathfinder:neighbours(node , tx , ty , map)
 	return n
 end
 
-function pathfinder:calc(open , closed , x , y , map)
+local function calc(open , closed , x , y , map)
 	if not get(closed , x , y) then return {} , closed , open end
 	local path = { get(closed , x , y) }
 	while path[#path].p do
@@ -42,7 +42,7 @@ function pathfinder:calc(open , closed , x , y , map)
 	end
 	local new = {}
 	for i = #path - 1 , 1 , -1 do
-		new[#path - i] = self.map[ path[i].x ][ path[i].y ]
+		new[#path - i] = map[ path[i].x ][ path[i].y ]
 	end
 	if not map[x][y]:open() then
 		new[#new] = nil
@@ -50,9 +50,10 @@ function pathfinder:calc(open , closed , x , y , map)
 	return new , closed , open
 end
 
+--functions
+
 function pathfinder:path(map , sx,sy , ex,ey)
 	--setup
-	self.map = map
 	local open , closed = {} , {}
 	local current
 	add(open , { x = sx , y = sy} )
@@ -72,15 +73,31 @@ function pathfinder:path(map , sx,sy , ex,ey)
 		add(closed , current)
 		if get(closed , ex , ey) then break end
 		--cheak neighbours
-		local n = self:neighbours(current , ex , ey , map)
+		local n = neighbours(current , ex , ey , map)
 		for i = 1 , #n do
-			if (self.map[n[i].x][n[i].y]:open() or (n[i].x == ex and n[i].y == ey)) and not get(closed , n[i].x , n[i].y) then
+			if (map[n[i].x][n[i].y]:open() or (n[i].x == ex and n[i].y == ey)) and not get(closed , n[i].x , n[i].y) then
 				add(open , n[i])
 			end
 		end
 		current = nil
 	end
-	return pathfinder:calc(open , closed , ex , ey , map)
+	return calc(open , closed , ex , ey , map)
+end
+
+function pathfinder:line(map , sx,sy , ex,ey , e)
+	local open = true
+	local steps = math.max(math.abs(sx-ex),math.abs(sy-ey))
+	for step = 0 , steps do
+		local p = step / steps
+		local x = math.floor(sx * (1-p) + ex * (p))
+		local y = math.floor(sy * (1-p) + ey * (p))
+		if e and x == ex and y == ey then break end
+		if not map[x][y]:open() then
+			open = false
+			break
+		end
+	end
+	return open , steps
 end
 
 class = require "system/class"

@@ -1,5 +1,5 @@
-return ability:new({name = "attack",folder = "fight",file = "a1",func = function(p,x,y)
-	if game.map[x][y].player then
-		game.map[x][y].player:addHp(-25)
-	end
+return ability:new({name = "attack",folder = "fight",file = "a1",func = function(self,x,y)
+	if not self.player.map[x][y].player then return end
+	local d = (self.player.inventory.primary or items.fist):damage()
+	self.player.map[x][y].player:addHp( d )
 end})
