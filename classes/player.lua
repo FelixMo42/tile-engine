@@ -3,6 +3,7 @@ player = class:new({
 	x = 1, y = 1,
 	color = color.blue,
 	path = {},
+	mode = "npc",
 	dialog = {text = "hello"},
 	hp = 100,
 	mana = 100,
@@ -11,9 +12,19 @@ player = class:new({
 		int = 0, will = 0, chr = 0,
 		str = 0, con = 0, dex = 0,
 	},
+	actions = {
+		movement = 5, action = 1
+	},
 	skills = {},
 	abilities = {}
 })
+
+function player:load()
+	for k , v in ipairs(self.abilities) do
+		self:addAbility( v:new() )
+		self.abilities[k] = nil
+	end
+end
 
 function player:draw(x,y,s)
 	local x = x or (self.x - self.map.x) * map_setting.scale
@@ -39,18 +50,19 @@ function player:update(dt)
 	if #self.path == 0 then return end
 	if type(self.path[1]) == "function" then
 		self.path[1](self)
-		self.path[1] = nil
+		table.remove(self.path , 1)
 		return self:update(dt)
-	else
-		local d = 1 / math.sqrt( (self.path[1].x - self.tile.x) ^ 2 + (self.path[1].y - self.tile.y) ^ 2 )
-		self.x = self.x + ( (self.path[1].x - self.tile.x) * dt * player_setting.speed * d )
-		self.y = self.y + ( (self.path[1].y - self.tile.y) * dt * player_setting.speed * d )
-		local cx = math.abs(self.x - self.tile.x) >= math.abs(self.path[1].x - self.tile.x)
-		local cy = math.abs(self.y - self.tile.y) >= math.abs(self.path[1].y - self.tile.y)
-		if cx and cy then
-			self:setPos(self.path[1].x, self.path[1].y)
-			table.remove(self.path , 1)
-		end
+	end
+	if self.actions.movement == 0 then return end
+	local d = 1 / math.sqrt( (self.path[1].x - self.tile.x) ^ 2 + (self.path[1].y - self.tile.y) ^ 2 )
+	self.x = self.x + ( (self.path[1].x - self.tile.x) * dt * player_setting.speed * d )
+	self.y = self.y + ( (self.path[1].y - self.tile.y) * dt * player_setting.speed * d )
+	local cx = math.abs(self.x - self.tile.x) >= math.abs(self.path[1].x - self.tile.x)
+	local cy = math.abs(self.y - self.tile.y) >= math.abs(self.path[1].y - self.tile.y)
+	if cx and cy then
+		self:setPos(self.path[1].x, self.path[1].y)
+		table.remove(self.path , 1)
+		self:use("movement")
 	end
 end
 
@@ -86,6 +98,45 @@ function player:addHp(a)
 	self.hp = self.hp + a
 	if self.hp <= 0 then
 		self.map:deletPlayer( self.x , self.y )
+	end
+	game.activate(self)
+end
+
+function player:turn()
+	self.actions.action = 1
+	self.actions.movement = 5
+	if self.mode == "npc" then
+		self.path = {}
+		self:goTo( game.party.x , game.party.y)
+		for i = 1 , self.actions.movement + 1 do
+			if i == self.actions.movement + 1 then
+				self.path[i] = function(self)
+					game.nextTurn()
+				end
+			else
+				if not self.path[i] then
+					self.path[i] = function(self)
+						game.nextTurn()
+					end
+				end
+			end
+		end
+	elseif self.mode == "player" then
+		if #game.initiative > 1 then
+			self.path = {}
+		end
+	end
+end
+
+function player:use(t,a)
+	a = a or 1
+	self.actions[t] = self.actions[t] - 1
+	local f = true
+	for k , v in pairs( self.actions ) do
+		if v ~= 0 then f = false end
+	end
+	if f or #game.initiative == 1 then
+		game.nextTurn()
 	end
 end
 

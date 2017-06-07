@@ -3,11 +3,14 @@
 tabs.game:addLayer("world" , 1)
 game.world:add( {} , "map" )
 mouse.tile = {}
-game.player = player:new()
-game.player:addAbility( abilities.move )
-game.player:addAbility( abilities.attack )
-game.ability = abilities.move
-game.initiative = {game.player}
+game.player = player:new({mode = "player"})
+game.party = game.player
+game.player:addAbility( abilities.move:new() )
+game.player:addAbility( abilities.attack:new() )
+game.player:addAbility( abilities["end turn"]:new() )
+game.initiative = {game.player, [game.player] = game.player}
+game.ability = game.party.abilities.tactical.move
+game.turn = 1
 
 --ui
 
@@ -66,6 +69,22 @@ game.world.info.child.mana:addCallback( "draw" , "setText" , function(self)
 	self.text = "Mana: "..game.player.mana
 end )
 
+game.world.info:addChild( button:new({
+	b_over = 0, bodyColor_over = color.grey, x = 100, y = 60
+}) , "movement" )
+
+game.world.info.child.movement:addCallback( "draw" , "setText" , function(self)
+	self.text = "movement: "..game.player.actions.movement
+end )
+
+game.world.info:addChild( button:new({
+	b_over = 0, bodyColor_over = color.grey, x = 100, y = 80
+}) , "actions" )
+
+game.world.info.child.actions:addCallback( "draw" , "setText" , function(self)
+	self.text = "actions: "..game.player.actions.action
+end )
+
 --functions
 
 function game.open(map)
@@ -94,6 +113,7 @@ end
 
 function game.mousepressed(x,y)
 	if mouse.used then return end
+	if game.player.mode ~= "player" then return end
 	if mouse.button == 1 then
 		local x , y = math.floor(mouse.tile.sx) , math.floor(mouse.tile.sy)
 		game.ability(x , y)
@@ -119,4 +139,25 @@ function game.mousepressed(x,y)
 			game.world.actions.child.delet.mousereleased.clear = f
 		end )
 	end
+end
+
+function game.keyreleased(key)
+	if key == "space" then
+		game.ability = game.party.abilities.tactical["move"]
+	elseif key == "enter" then
+		game.nextTurn()
+	end
+end
+
+function game.nextTurn()
+	game.turn = math.loop( game.turn + 1 , #game.initiative )
+	game.player = game.initiative[game.turn]
+	game.player:turn()
+end
+
+function game.activate(p)
+	if game.initiative[p] then return false end
+	game.initiative[p] = p
+	game.initiative[#game.initiative + 1] = p
+	return true
 end

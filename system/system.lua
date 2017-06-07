@@ -65,6 +65,23 @@ math.clamp = function(val,min,max)
 	return math.min( math.max(val + 0,min + 0) , max + 0)
 end
 
+math.loop = function(val,max,min)
+	if min then
+		local m = min
+		min = max
+		max = m
+	else
+		min = 1
+	end
+	if val > max then
+		val = min + (val - max - 1)
+	end
+	while val < min do
+		val = max - (min - val)
+	end
+	return val
+end
+
 math.sign = function(n)
 	if n > 0 then
 		return 1
