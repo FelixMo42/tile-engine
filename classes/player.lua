@@ -19,10 +19,17 @@ player = class:new({
 	abilities = {}
 })
 
-function player:load()
-	for k , v in ipairs(self.abilities) do
-		self:addAbility( v:new() )
-		self.abilities[k] = nil
+function player:load(orig)
+	local a = self.abilities
+	self.abilities = {}
+	for k , v in pairs(a) do
+		if type(v) == "table" then
+			for k , v in pairs(v) do
+				self:addAbility( v:new() )
+			end
+		else
+			self:addAbility( v:new() )
+		end
 	end
 end
 
@@ -47,13 +54,16 @@ function player:goTo(x,y,f)
 end
 
 function player:update(dt)
-	if #self.path == 0 then return end
+	local function nt(self) if game.player.mode == "npc" then game.nextTurn() end end
+	if #self.path == 0 then return nt(self) end
+	--call function
 	if type(self.path[1]) == "function" then
 		self.path[1](self)
 		table.remove(self.path , 1)
 		return self:update(dt)
 	end
-	if self.actions.movement == 0 then return end
+	--move
+	if self.actions.movement == 0 then return nt(self) end
 	local d = 1 / math.sqrt( (self.path[1].x - self.tile.x) ^ 2 + (self.path[1].y - self.tile.y) ^ 2 )
 	self.x = self.x + ( (self.path[1].x - self.tile.x) * dt * player_setting.speed * d )
 	self.y = self.y + ( (self.path[1].y - self.tile.y) * dt * player_setting.speed * d )
@@ -67,7 +77,9 @@ function player:update(dt)
 end
 
 function player:setPos(x,y)
+	self.map[self.tile.x][self.tile.y].player = nil
 	self.map.playerMap[self.tile.x][self.tile.y] = nil
+	self.map[x][y].player = self
 	self.x , self.y = x , y
 	self.tile = self.map[x][y]
 	self.map.playerMap[x][y] = self
@@ -107,20 +119,9 @@ function player:turn()
 	self.actions.movement = 5
 	if self.mode == "npc" then
 		self.path = {}
-		self:goTo( game.party.x , game.party.y)
-		for i = 1 , self.actions.movement + 1 do
-			if i == self.actions.movement + 1 then
-				self.path[i] = function(self)
-					game.nextTurn()
-				end
-			else
-				if not self.path[i] then
-					self.path[i] = function(self)
-						game.nextTurn()
-					end
-				end
-			end
-		end
+		self:goTo( game.party.x , game.party.y , function(self)
+			self.abilities.offensive.attack(game.party.x,game.party.y)
+		end )
 	elseif self.mode == "player" then
 		if #game.initiative > 1 then
 			self.path = {}

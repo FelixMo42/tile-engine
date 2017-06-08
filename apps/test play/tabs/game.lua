@@ -142,10 +142,12 @@ function game.mousepressed(x,y)
 end
 
 function game.keyreleased(key)
-	if key == "space" then
-		game.ability = game.party.abilities.tactical["move"]
-	elseif key == "enter" then
-		game.nextTurn()
+	if game.player.mode == "player" then
+		if key == "space" then
+			game.ability = game.party.abilities.tactical.move
+		elseif key == "return" then
+			game.nextTurn()
+		end
 	end
 end
 
