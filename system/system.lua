@@ -92,6 +92,10 @@ math.sign = function(n)
 	end
 end
 
+math.approach = function(c,t,s)
+	return math.min(c + s , t)
+end
+
 --table
 
 table.reverse = function(t)
@@ -118,4 +122,18 @@ table.empty = function(t)
 		return false
 	end
 	return true
+end
+
+--love
+
+function love.graphics.prints(t,x,y,w,h,xa,ya)
+	ya = ya or "center"
+	if ya == "center" then
+		local l = #( ( {love.graphics.getFont():getWrap(t,w)} )[2] )
+		y = y + h / 2 -  (l * love.graphics.getFont():getHeight())/2
+	elseif ya == "bottom" then
+		local l = #( ( {love.graphics.getFont():getWrap(t,w)} )[2] )
+		y = y + h - (l * love.graphics.getFont():getHeight())
+	end
+	love.graphics.printf(t,x,y,w,xa or "center")
 end

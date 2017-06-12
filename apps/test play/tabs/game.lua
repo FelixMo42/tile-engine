@@ -3,7 +3,7 @@
 tabs.game:addLayer("world" , 1)
 game.world:add( {} , "map" )
 mouse.tile = {}
-game.player = player:new({mode = "player"})
+game.player = player:new({mode = "player", name = "Zander"})
 game.party = game.player
 game.player:addAbility( abilities.move:new() )
 game.player:addAbility( abilities.attack:new() )
@@ -18,15 +18,21 @@ game.world:add( ui:new({x = 0 , y = 0}) , "actions")
 
 game.world:add( button:new({
 	text = "inventory", b_over = 0, bodyColor_over = color.grey,
-	x = var:new( function() return screen.width - 100 end ),
-	func = function() love.open( inventory ) end
+	x = 100, func = function()
+		if game.player.mode == "player" then
+			love.open( inventory )
+		end
+	end
 }) , "inventory")
+
+--moves
 
 game.world:add( ellement.menu:new({
 	text = "moves", b_over = 0, bodyColor_over = color.grey
 }) , "move" )
 
 local function moves_setup(ui , abilities , x)
+	ui.child:clear()
 	local y = 20
 	for k , v in pairs(abilities) do
 		if type(v) == "table" then
@@ -49,43 +55,42 @@ end
 
 moves_setup( game.world.move , game.player.abilities , 0 )
 
-game.world:add( ellement.menu:new({
-	text = "info", b_over = 0, bodyColor_over = color.grey, x = 100
-}) , "info" )
+--info
 
-game.world.info:addChild( button:new({
-	b_over = 0, bodyColor_over = color.grey, x = 100, y = 20
-}) , "hp" )
+game.world:add( ui:new({ player = game.party , draw = function(self)
+	--bg
+	love.graphics.setColor( color.grey )
+	love.graphics.rectangle("fill",-10,screen.height-45,170,50,5)
+	love.graphics.setColor( color.black )
+	love.graphics.rectangle("line",-10,screen.height-45,170,50,5)
+	--mana
+	love.graphics.setColor( color.blue )
+	local mana = self.player.mana/self.player.maxMana*150
+	love.graphics.rectangle("fill",5,screen.height-19,mana,15,5)
+	love.graphics.setColor( color.black )
+	love.graphics.rectangle("line",5,screen.height-19,150,15,5)
+	love.graphics.prints( "Mana: "..self.player.mana.." / "..self.player.maxMana,5,screen.height-19,150,15)
+	--hp
+	love.graphics.setColor( color.red )
+	local hp = self.player.hp/self.player.maxHp*150
+	love.graphics.rectangle("fill",5,screen.height-39,hp,15,5)
+	love.graphics.setColor( color.black )
+	love.graphics.rectangle("line",5,screen.height-39,150,15,5)
+	love.graphics.prints( "HP: "..self.player.hp.." / "..self.player.maxHp,5,screen.height-39,150,15)
+end }) , "party info")
 
-game.world.info.child.hp:addCallback( "draw" , "setText" , function(self)
-	self.text = "HP: "..game.player.hp
-end )
+game.world:add( ui:new({ draw = function(self)
+	local text = ""
+	text = text.."player: "..game.player.name.."\n"
+	if game.player.mode == "player" then
+		text = text.."main actions: "..game.player.actions.action.."\n"
+		text = text.."movement actions: "..game.player.actions.movement.."\n"
+	end
+	love.graphics.setColor( color.black )
+	love.graphics.prints(text,2 ,5,160,screen.height-50,"left","bottom")
+end }) , "player info")
 
-game.world.info:addChild( button:new({
-	b_over = 0, bodyColor_over = color.grey, x = 100, y = 40
-}) , "mana" )
-
-game.world.info.child.mana:addCallback( "draw" , "setText" , function(self)
-	self.text = "Mana: "..game.player.mana
-end )
-
-game.world.info:addChild( button:new({
-	b_over = 0, bodyColor_over = color.grey, x = 100, y = 60
-}) , "movement" )
-
-game.world.info.child.movement:addCallback( "draw" , "setText" , function(self)
-	self.text = "movement: "..game.player.actions.movement
-end )
-
-game.world.info:addChild( button:new({
-	b_over = 0, bodyColor_over = color.grey, x = 100, y = 80
-}) , "actions" )
-
-game.world.info.child.actions:addCallback( "draw" , "setText" , function(self)
-	self.text = "actions: "..game.player.actions.action
-end )
-
---functions
+--love functions
 
 function game.open(map)
 	if map then
@@ -95,13 +100,19 @@ function game.open(map)
 		game.player.x = map.spawn.x
 		game.player.y = map.spawn.y
 		map:addPlayer( game.player )
+		local px = game.player.x - (screen.width / map_setting.scale) / 2 + .5
+		local py = game.player.y - (screen.height / map_setting.scale) / 2 + .5
+		game.map:setPos( px , py )
 	end
 end
 
-function game.update()
-	local x = game.player.x - (screen.width / map_setting.scale) / 2
-	local y = game.player.y - (screen.height / map_setting.scale) / 2
-	game.map:setPos(x + .5, y + .5)
+function game.update(dt)
+	local s = player_setting.speed -- speed in tiles per second
+	local px = game.player.x - (screen.width / map_setting.scale) / 2 + .5
+	local py = game.player.y - (screen.height / map_setting.scale) / 2 + .5
+	local cx = game.map.x
+	local cy = game.map.y
+	game.map:setPos( math.approach(cx , px , s * dt) , math.approach(cy , py , s * dt) )
 end
 
 function game.mousemoved(x,y,dx,dy)
@@ -150,6 +161,8 @@ function game.keyreleased(key)
 		end
 	end
 end
+
+--functions
 
 function game.nextTurn()
 	game.turn = math.loop( game.turn + 1 , #game.initiative )

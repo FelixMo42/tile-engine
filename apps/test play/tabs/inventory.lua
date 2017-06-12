@@ -16,10 +16,10 @@ function inventory.draw()
 	--draw box
 	game.map:draw()
 	love.graphics.setColor(color.black)
-	love.graphics.rectangle("fill",18,18,screen.height-36,screen.width-36)
+	love.graphics.rectangle("fill",18,18,screen.width-36,screen.height-36)
 	for i = 1 , 2 do
 		love.graphics.setColor(color.white)
-		love.graphics.rectangle("line",20,20,screen.height-40,screen.width-40)
+		love.graphics.rectangle("line",20,20,screen.width-40,screen.height-40)
 		love.graphics.line(20,40 , screen.width-22,40)
 	end
 end

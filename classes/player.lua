@@ -4,6 +4,7 @@ player = class:new({
 	color = color.blue,
 	path = {},
 	mode = "npc",
+	name = "def",
 	dialog = {text = "hello"},
 	hp = 100,
 	mana = 100,
@@ -20,6 +21,8 @@ player = class:new({
 })
 
 function player:load(orig)
+	self.maxHp = self.maxHp or self.hp
+	self.maxMana = self.maxMana or self.mana
 	local a = self.abilities
 	self.abilities = {}
 	for k , v in pairs(a) do
@@ -54,7 +57,7 @@ function player:goTo(x,y,f)
 end
 
 function player:update(dt)
-	local function nt(self) if game.player.mode == "npc" then game.nextTurn() end end
+	local function nt(self) if self.mode == "npc" and self == game.player then game.nextTurn() end end
 	if #self.path == 0 then return nt(self) end
 	--call function
 	if type(self.path[1]) == "function" then
@@ -110,6 +113,16 @@ function player:addHp(a)
 	self.hp = self.hp + a
 	if self.hp <= 0 then
 		self.map:deletPlayer( self.x , self.y )
+		if game.initiative[self] then
+			game.initiative[self] = nil
+			for i , v in ipairs(game.initiative) do
+				if v == self then
+					table.remove( game.initiative , i )
+					break
+				end
+			end
+		end
+		return
 	end
 	game.activate(self)
 end
@@ -124,6 +137,7 @@ function player:turn()
 		end )
 	elseif self.mode == "player" then
 		if #game.initiative > 1 then
+			game.ability = self.abilities.tactical.move
 			self.path = {}
 		end
 	end

@@ -2,7 +2,7 @@ item = class:new({
 	type = "item",
 	slot = "usable",
 	color = color.brown,
-	max = 2, min = 0,
+	max = 5, min = 0,
 	equiped = false
 })
 

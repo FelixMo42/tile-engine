@@ -26,11 +26,7 @@ button:addCallback("draw","outline",function(self)
 end )
 
 button:addCallback("draw","text",function(self)
-	local text = self.text or self.text_def
-	love.graphics.setColor(self.textColor)
-	local l = #( ( {love.graphics.getFont():getWrap(self.text,self.width)} )[2] )
-	local y = self.y + self.height / 2 -  (l * love.graphics.getFont():getHeight())/2
-	love.graphics.printf(self.text,self.x,y,self.width,self.textMode or "center")
+	love.graphics.prints(self.text,self.x,self.y,self.width,self.height,self.textMode,self.textAligne)
 end )
 
 button:addCallback("mousepressed","pressed",function(self)
