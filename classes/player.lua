@@ -44,18 +44,6 @@ function player:draw(x,y,s)
 	love.graphics.rectangle("fill" , x , y , s , 2 * s )
 end
 
-function player:goTo(x,y,f)
-	local path = pathfinder:path(self.map , math.floor(self.x),math.floor(self.y) , x,y)
-	if #self.path == 0 then
-		self.path = path
-	else
-		for i = 1 , math.max(#path , #self.path) do
-			self.path[i + 1] = path[i]
-		end
-	end
-	if f then self.path[#self.path + 1] = f end
-end
-
 function player:update(dt)
 	local function nt(self) if self.mode == "npc" and self == game.player then game.nextTurn() end end
 	if #self.path == 0 then return nt(self) end
@@ -77,6 +65,18 @@ function player:update(dt)
 		table.remove(self.path , 1)
 		self:use("movement")
 	end
+end
+
+function player:goTo(x,y,f)
+	local path = pathfinder:path(self.map , math.floor(self.x),math.floor(self.y) , x,y)
+	if #self.path == 0 then
+		self.path = path
+	else
+		for i = 1 , math.max(#path , #self.path) do
+			self.path[i + 1] = path[i]
+		end
+	end
+	if f then self.path[#self.path + 1] = f end
 end
 
 function player:setPos(x,y)
@@ -153,6 +153,28 @@ function player:use(t,a)
 	if f or #game.initiative == 1 then
 		game.nextTurn()
 	end
+end
+
+function player:addSkill(s)
+	if self.skills[s.name] then return s end
+	s.player = self
+	self.skills[s.name] = s
+	self.skills[s.file] = s
+	self.skills[#self.skills + 1] = s
+	return s
+end
+
+function player:getSkill(s,xp)
+	xp = xp or 10
+	if not self.skills[s] then
+		if skills[s] then
+			self:addSkill( skills[s]:new() )
+		else
+			return 1
+		end
+	end
+	self.skills[s]:addXP(xp)
+	return self.skills[s]:getLevel()
 end
 
 npcs = {}

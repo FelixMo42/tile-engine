@@ -30,7 +30,7 @@ local function setup_skills()
 		}) , "skill_"..i.."_name" )
 
 		menu.ui.skill.child.skills:addChild( ellement.textbox:new({
-			startText = "stat: ", text = skill.stat, y = i * 25 + 10, s = s,
+			startText = "stat: ", text = s.stat, y = i * 25 + 10, s = s,
 			x = var:new( function() return screen.width - 215 end ),
 			onEdit = function(self) self.s.stat = self.text  end
 		}) , "skill_"..i.."_state" )

@@ -1,0 +1,1 @@
+return skill:new({["file"] = "s3",["name"] = "attack"})

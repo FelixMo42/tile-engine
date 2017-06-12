@@ -10,7 +10,19 @@ inventory.ui:add( ellement.menu:new({
 	text = "inventory", b_over = 0, bodyColor_over = color.grey, x = 20, y = 20
 }) , "inventory" )
 
---functions
+inventory.ui:add( ellement.menu:new({
+	text = "skills", b_over = 0, bodyColor_over = color.grey, x = 120, y = 20
+}) , "skills" )
+
+--love functions
+
+function inventory.open(t)
+	setUpInventory()
+	setUpSkills()
+	--open right tab
+	t = t or "inventory"
+	inventory.ui[t].child.active = true
+end
 
 function inventory.draw()
 	--draw box
@@ -23,6 +35,8 @@ function inventory.draw()
 		love.graphics.line(20,40 , screen.width-22,40)
 	end
 end
+
+--functions
 
 function setUpInventory()
 	inventory.ui.inventory.child:clear()
@@ -55,12 +69,18 @@ function setUpInventory()
 			x = var:new( function() return screen.width - 47 end ), y = i * 25 + 20,
 		}) )
 	end
-	inventory.ui.inventory:addChild(button:new({width = 1000,height = 1000,draw = {}}),"bg")
+	inventory.ui.inventory:addChild(button:new({x = 20,y = 40,width = 1000,height = 1000,draw = {}}),"bg")
 end
 
-function inventory.open(t)
-	setUpInventory()
-	--open right tab
-	t = t or "inventory"
-	inventory.ui[t].child.active = true
+function setUpSkills()
+	inventory.ui.skills.child:clear()
+	local i = 1
+	for k , s in ipairs( game.player.skills ) do
+		inventory.ui.skills:addChild( button:new({
+			text = s.name.." - lv "..s.level.." - xp "..s.xp,
+			x = 25, y = i * 25 + 20, width = 200
+		}) )
+		i = i + 1
+	end
+	inventory.ui.inventory:addChild(button:new({x = 20,y = 40,width = 1000,height = 1000,draw = {}}),"bg")
 end

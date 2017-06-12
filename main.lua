@@ -13,7 +13,10 @@ mouse = {
 
 font = setmetatable( {} , {
 	__index = function(self,key)
-		self[key] = love.graphics.newFont(key)
+		if type(key) == "number" then
+			self[key] = love.graphics.newFont(key)
+			return self[key]
+		end
 	end
 } )
 

@@ -25,6 +25,15 @@ game.world:add( button:new({
 	end
 }) , "inventory")
 
+game.world:add( button:new({
+	text = "skills", b_over = 0, bodyColor_over = color.grey,
+	x = 200, func = function()
+		if game.player.mode == "player" then
+			love.open( inventory , "skills" )
+		end
+	end
+}) , "skills")
+
 --moves
 
 game.world:add( ellement.menu:new({
@@ -59,6 +68,7 @@ moves_setup( game.world.move , game.player.abilities , 0 )
 
 game.world:add( ui:new({ player = game.party , draw = function(self)
 	--bg
+	love.graphics.setFont( font[11] )
 	love.graphics.setColor( color.grey )
 	love.graphics.rectangle("fill",-10,screen.height-45,170,50,5)
 	love.graphics.setColor( color.black )
@@ -77,6 +87,7 @@ game.world:add( ui:new({ player = game.party , draw = function(self)
 	love.graphics.setColor( color.black )
 	love.graphics.rectangle("line",5,screen.height-39,150,15,5)
 	love.graphics.prints( "HP: "..self.player.hp.." / "..self.player.maxHp,5,screen.height-39,150,15)
+	love.graphics.setFont( font[12] )
 end }) , "party info")
 
 game.world:add( ui:new({ draw = function(self)
@@ -87,7 +98,9 @@ game.world:add( ui:new({ draw = function(self)
 		text = text.."movement actions: "..game.player.actions.movement.."\n"
 	end
 	love.graphics.setColor( color.black )
+	love.graphics.setFont( font[13] )
 	love.graphics.prints(text,2 ,5,160,screen.height-50,"left","bottom")
+	love.graphics.setFont( font[12] )
 end }) , "player info")
 
 --love functions
