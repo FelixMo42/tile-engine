@@ -55,6 +55,7 @@ function map:draw()
 end
 
 function map:update(dt)
+	if not game then return end
 	for k , p in pairs(self.players) do
 		p:update(dt)
 	end

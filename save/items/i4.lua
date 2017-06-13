@@ -1,0 +1,1 @@
+return item:new({["color"] = {[1] = 100,[2] = 255,[3] = 150},["name"] = "leather armour",["file"] = "i4",["bonuses"] = {["defence"] = 5},["slot"] = "chest"})

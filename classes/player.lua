@@ -6,11 +6,9 @@ player = class:new({
 	mode = "npc",
 	name = "def",
 	dialog = {text = "hello"},
-	hp = 100,
-	mana = 100,
 	inventory = {},
 	states = {
-		int = 0, will = 0, chr = 0,
+		int = 0, wil = 0, chr = 0,
 		str = 0, con = 0, dex = 0,
 	},
 	actions = {
@@ -21,8 +19,10 @@ player = class:new({
 })
 
 function player:load(orig)
-	self.maxHp = self.maxHp or self.hp
-	self.maxMana = self.maxMana or self.mana
+	self.maxHp = self.maxHp or self.hp or (self.states.con+1)*25
+	self.hp = self.maxHp
+	self.maxMana = self.maxMana or self.mana or (self.states.wil+1)*25
+	self.mana = self.maxMana
 	local a = self.abilities
 	self.abilities = {}
 	for k , v in pairs(a) do
@@ -109,7 +109,8 @@ function player:addAbility(a)
 	end
 end
 
-function player:addHp(a)
+function player:damage(a)
+	a = -math.max(a,0)
 	self.hp = self.hp + a
 	if self.hp <= 0 then
 		self.map:deletPlayer( self.x , self.y )
@@ -130,6 +131,7 @@ end
 function player:turn()
 	self.actions.action = 1
 	self.actions.movement = 5
+	for k , s in pairs(self.skills) do s:update() end
 	if self.mode == "npc" then
 		self.path = {}
 		self:goTo( game.party.x , game.party.y , function(self)

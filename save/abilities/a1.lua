@@ -3,11 +3,9 @@ return ability:new({ name = "attack",folder = "offensive",file = "a1",func = fun
 
 	local s = math.random(0,20) + self.player:getSkill("aim")
 	local r = math.random(0,10) + self.player.map[x][y].player:getSkill("dodge" , 5)
-	if r > s then
-		return love.errhand("dodge")
-	end
+	if s > r then return end
 
 	local d = (self.player.inventory.primary or items.fist):damage()
 	d = d + self.player:getSkill("attack") - self.player.map[x][y].player:getSkill("defence",5)
-	self.player.map[x][y].player:addHp( -d )
+	self.player.map[x][y].player:damage( d )
 end })

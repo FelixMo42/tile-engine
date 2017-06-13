@@ -94,6 +94,31 @@ item_editor.ui:add( ellement.textbox:new({
 	end
 }) , "min" )
 
+item_editor.ui:add( ellement.textbox:new({
+	x = 5, startText = "bonus: ", y = 155,
+	width = var:new(function() return (screen.width / 2 - 60 - 5) * (2/3) end),
+}) , "bonuses" )
+
+item_editor.ui.bonuses:addChild( ellement.textbox:new({
+	x = var:new(function() return (screen.width / 2 - 60 - 5) * (2/3) + 10 end),
+	width = var:new(function() return (screen.width / 2 - 60 - 5) / 3 end),
+	startText = "amu: ", y = 155, filter = "0123456789",
+}) , "amu" )
+
+item_editor.ui.bonuses:addChild( button:new({
+	x = var:new(function() return screen.width / 2 - 25 end),
+	text = "+", y = 155, width = 20, func = function(self)
+		item_editor.item.bonuses[self.parent.text] = tonumber( self.parent.child.amu.text )
+	end
+}) , "add" )
+
+item_editor.ui.bonuses:addChild( button:new({
+	x = var:new(function() return screen.width / 2 - 50 end),
+	text = "-", y = 155, width = 20, func = function()
+		item_editor.item.bonuses[self.parent.text] = nil
+	end
+}) , "sub" )
+
 --functions
 
 function item_editor.open(t)

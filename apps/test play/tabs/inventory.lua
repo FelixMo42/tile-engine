@@ -77,7 +77,7 @@ function setUpSkills()
 	local i = 1
 	for k , s in ipairs( game.player.skills ) do
 		inventory.ui.skills:addChild( button:new({
-			text = s.name.." - lv "..s.level.." - xp "..s.xp,
+			text = s.name.." - lv "..s.level.." + "..s:getLevel()-s.level.." - xp "..s.xp,
 			x = 25, y = i * 25 + 20, width = 200
 		}) )
 		i = i + 1
