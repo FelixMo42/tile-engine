@@ -2,14 +2,8 @@
 
 tabs.game:addLayer("world" , 1)
 game.world:add( {} , "map" )
+game.initiative = {}
 mouse.tile = {}
-game.player = player:new({mode = "player", name = "Zander"})
-game.party = game.player
-game.player:addAbility( abilities.move:new() )
-game.player:addAbility( abilities.attack:new() )
-game.player:addAbility( abilities["end turn"]:new() )
-game.initiative = {game.player, [game.player] = game.player}
-game.ability = game.party.abilities.tactical.move
 game.turn = 1
 
 --ui
@@ -62,11 +56,9 @@ local function moves_setup(ui , abilities , x)
 	end
 end
 
-moves_setup( game.world.move , game.player.abilities , 0 )
-
 --info
 
-game.world:add( ui:new({ player = game.party , draw = function(self)
+game.world:add( ui:new({ draw = function(self)
 	--bg
 	love.graphics.setFont( font[11] )
 	love.graphics.setColor( color.grey )
@@ -75,18 +67,18 @@ game.world:add( ui:new({ player = game.party , draw = function(self)
 	love.graphics.rectangle("line",-10,screen.height-45,170,50,5)
 	--mana
 	love.graphics.setColor( color.blue )
-	local mana = self.player.mana/self.player.maxMana*150
+	local mana = game.party.mana/game.party.maxMana*150
 	love.graphics.rectangle("fill",5,screen.height-19,mana,15,5)
 	love.graphics.setColor( color.black )
 	love.graphics.rectangle("line",5,screen.height-19,150,15,5)
-	love.graphics.prints( "Mana: "..self.player.mana.." / "..self.player.maxMana,5,screen.height-19,150,15)
+	love.graphics.prints( "Mana: "..game.party.mana.." / "..game.party.maxMana,5,screen.height-19,150,15)
 	--hp
 	love.graphics.setColor( color.red )
-	local hp = self.player.hp/self.player.maxHp*150
+	local hp = game.party.hp/game.party.maxHp*150
 	love.graphics.rectangle("fill",5,screen.height-39,hp,15,5)
 	love.graphics.setColor( color.black )
 	love.graphics.rectangle("line",5,screen.height-39,150,15,5)
-	love.graphics.prints( "HP: "..self.player.hp.." / "..self.player.maxHp,5,screen.height-39,150,15)
+	love.graphics.prints( "HP: "..game.party.hp.." / "..game.party.maxHp,5,screen.height-39,150,15)
 	love.graphics.setFont( font[12] )
 end }) , "party info")
 
@@ -96,6 +88,7 @@ game.world:add( ui:new({ draw = function(self)
 	if game.player.mode == "player" then
 		text = text.."main actions: "..game.player.actions.action.."\n"
 		text = text.."movement actions: "..game.player.actions.movement.."\n"
+		text = text.."curent ability: "..game.ability.name.."\n"
 	end
 	love.graphics.setColor( color.black )
 	love.graphics.setFont( font[13] )
@@ -105,18 +98,26 @@ end }) , "player info")
 
 --love functions
 
-function game.open(map)
-	if map then
-		game.map = map
-		game.world.map = map
-		game.world[1] = map
-		game.player.x = map.spawn.x
-		game.player.y = map.spawn.y
-		map:addPlayer( game.player )
-		local px = game.player.x - (screen.width / map_setting.scale) / 2 + .5
-		local py = game.player.y - (screen.height / map_setting.scale) / 2 + .5
-		game.map:setPos( px , py )
-	end
+function game.open(map,player)
+	if not map then return end
+	--player
+	local map = menu.map
+	local player = menu.player
+	player.x = map.spawn.x
+	player.y = map.spawn.y
+	game.activate( player )
+	game.party = player
+	game.player = player
+	game.ability = game.party.abilities.tactical.move
+	moves_setup( game.world.move , player.abilities , 0 )
+	--map
+	game.map = map
+	game.world.map = map
+	game.world[1] = map
+	map:addPlayer( player )
+	local px = player.x - (screen.width / map_setting.scale) / 2 + .5
+	local py = player.y - (screen.height / map_setting.scale) / 2 + .5
+	game.map:setPos( px , py )
 end
 
 function game.update(dt)

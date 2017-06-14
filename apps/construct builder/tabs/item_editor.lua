@@ -20,7 +20,7 @@ item_editor.ui:add( button:new({
 	y = var:new(function() return screen.height - 25 end)
 }) , "delet" )
 
---states
+--color
 
 item_editor.ui:add( ellement.textbox:new({
 	x = 5, startText = "red: ", y = 5, filter = "0123456789",
@@ -58,6 +58,8 @@ item_editor.ui:add( ellement.textbox:new({
 	end
 }) , "blue" )
 
+--equipment
+
 item_editor.ui:add( ellement.textbox:new({
 	x = 5, startText = "equipe slot: ", y = 80,
 	width = var:new(function() return screen.width / 2 - 10 end),
@@ -93,6 +95,8 @@ item_editor.ui:add( ellement.textbox:new({
 		end
 	end
 }) , "min" )
+
+--bonnuses
 
 item_editor.ui:add( ellement.textbox:new({
 	x = 5, startText = "bonus: ", y = 155,

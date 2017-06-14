@@ -98,6 +98,9 @@ function player:getActions()
 end
 
 function player:addAbility(a)
+	if (a.folder and self.abilities[a.folder] and self.abilities[a.folder][a.name]) or self.abilities[a.name] then
+		return
+	end
 	a.player = self
 	if a.folder then
 		if not self.abilities[a.folder] then
@@ -180,5 +183,6 @@ function player:getSkill(s,xp)
 end
 
 npcs = {}
+players = {}
 
 player_setting = {speed = 5 , file = "npcs"}
