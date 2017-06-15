@@ -13,4 +13,10 @@ function object:getActions()
 	return {}
 end
 
+local mt = getmetatable(object)
+
+mt.__tostring = function(self)
+	return "objects."..self.file..":new()"
+end
+
 objects = {}

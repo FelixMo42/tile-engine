@@ -1,0 +1,1 @@
+return skill:new({["file"] = "s6", ["stat"] = "int", ["name"] = "pyromancy", })

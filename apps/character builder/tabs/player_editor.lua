@@ -11,7 +11,7 @@ player_editor.ui:add( button:new({
 	x = var:new( function() return screen.width/2 + 5 end ),
 	y = var:new( function() return screen.height - 25 end ),
 	width = var:new( function() return screen.width/2 - 10 end ),
-	func = function(self) filesystem.save(player_editor.player) end,
+	func = function(self) filesystem:saveClass(player_editor.player) end,
 	text = "save"
 }) , "save" )
 
@@ -39,7 +39,7 @@ player_editor.ui:add( ellement.textbox:new({
 --abilites
 
 player_editor.ui:add( ellement.textbox:new({
-	x = 5, startText = "bonus: ", y = 80,
+	x = 5, startText = "ability: ", y = 80,
 	width = var:new(function() return screen.width / 2 - 60 end),
 }) , "abilities" )
 
@@ -71,11 +71,9 @@ function player_editor.open(p)
 	for k , v in pairs(a) do
 		if type(v) == "table" then
 			for k , v in pairs(v) do
-				v.save = ability.save
 				p.abilities[v.file] = v
 			end
 		else
-			v.save = ability.save
 			p.abilities[v.file] = v
 		end
 	end

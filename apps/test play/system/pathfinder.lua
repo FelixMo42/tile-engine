@@ -91,7 +91,7 @@ function pathfinder:line(map , sx,sy , ex,ey , e)
 		local p = step / steps
 		local x = math.floor(sx * (1-p) + ex * (p))
 		local y = math.floor(sy * (1-p) + ey * (p))
-		if x ~= sx and y ~= sy then
+		if x ~= sx or y ~= sy then
 			if e and x == ex and y == ey then break end
 			if not map[x][y]:open() then
 				open = false

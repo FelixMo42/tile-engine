@@ -1,4 +1,4 @@
-local lambda = require("class"):new({type = "function"})
+local lambda = class:new({type = "function"})
 
 mt = getmetatable(lambda)
 
@@ -31,7 +31,5 @@ function lambda:setParameters(...)
 end
 
 lambda = lambda:new()
-
-package.preload["lambda"] = function() return lambda end
 
 return lambda

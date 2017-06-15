@@ -81,4 +81,10 @@ function tile:getActions()
 	return actions
 end
 
+local mt = getmetatable(tile)
+
+mt.__tostring = function(self)
+	return "tiles."..self.file..":new()"
+end
+
 tiles = {}

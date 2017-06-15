@@ -1,4 +1,4 @@
-local tab = require("class"):new({
+local tab = class:new({
 	layer = {}
 })
 

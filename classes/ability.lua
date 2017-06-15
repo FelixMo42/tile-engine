@@ -6,6 +6,10 @@ ability = class:new({
 	moves = 1
 })
 
+function ability:save()
+	
+end
+
 local mt = getmetatable(ability)
 
 mt.__call = function(self,x,y)
@@ -29,6 +33,10 @@ mt.__call = function(self,x,y)
 	--do it
 	self.player.mana = self.player.mana - self.cost
 	self:func(x,y)
+end
+
+mt.__tostring = function(self)
+	return "abilities."..self.file..":new()"
 end
 
 abilities = {}

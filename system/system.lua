@@ -1,4 +1,4 @@
--- pairs
+--lua
 
 rawnext = next
 rawpairs = pairs
@@ -11,8 +11,6 @@ end
 
 function pairs(t) return next, t, nil end
 
--- type
-
 rawtype = type
 
 function type(item)
@@ -23,16 +21,12 @@ function type(item)
 	return rawtype(item)
 end
 
---setmetatable
-
 rawsetmetatable = setmetatable
 
 function setmetatable(item,mt)
 	local meta = rawgetmetatable(item)
     return (meta and meta.__setmetatable or rawsetmetatable)(item,mt)
 end
-
---getmetatable
 
 rawgetmetatable = getmetatable
 
@@ -43,8 +37,6 @@ function getmetatable(item)
 	end
     return meta
 end
-
---set and get
 
 defrawset = rawset
 defrawget = rawget
@@ -57,6 +49,18 @@ end
 function rawset(table,key,value)
 	local meta = rawgetmetatable(table)
     return (meta and meta.__rawset or defrawset)(table,key,value)
+end
+
+rawtostring = tostring
+
+function tostring(v)
+	if rawtype(v) == "table" then
+		local mt = getmetatable(v)
+		if mt and mt.__tostring then
+			return mt.__tostring(v)
+		end
+	end
+	return rawtostring(v)
 end
 
 --math
@@ -122,6 +126,30 @@ table.empty = function(t)
 		return false
 	end
 	return true
+end
+ 
+table.copy = function(s,t)
+	local n , t = {} , t or {}
+	for k , v in pairs(s) do
+		if type(v) == "table" then
+			if not t[v] then
+				t[v] = {}
+				t[v] = table.copy(v,t)
+			end
+			n[k] = t[v]
+		else
+			n[k] = v
+		end
+	end
+	local m = getmetatable(s)
+	if m then
+		if not t[m] then
+			t[m] = {}
+			t[m] = table.copy(m,t)
+		end
+		getmetatable(n , t[m])
+	end
+	return n
 end
 
 --love

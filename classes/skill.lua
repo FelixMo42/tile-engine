@@ -43,4 +43,10 @@ function skill:update()
 	end
 end
 
+local mt = getmetatable(skill)
+
+mt.__tostring = function(self)
+	return "skills."..self.file..":new()"
+end
+
 skills = {}

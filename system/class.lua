@@ -1,28 +1,5 @@
 local class = {}
 
-local function copy(table,l,t)
-	l = l or 1
-	t = t or {}
-	local new = {}
-	for k , v in pairs(table) do
-		if type(v) == "table" then
-			if not t[v] then
-				if l == 0 then
-					t[v] = v
-				else
-					t[v] = copy(v,l-1,t)
-				end
-			end
-			new[k] = t[v]
-		else
-			new[k] = v
-		end
-	end
-	local mt = getmetatable(table)
-	if mt then mt = copy(mt) end
-	return new
-end
-
 getter = {}
 setter = {}
 
@@ -44,7 +21,7 @@ setmetatable(class , {
 		return rawget(self , key)
 	end,
 	__copy = function(self)
-		return copy(self,-1)
+		return table.copy(self)
 	end,
 	__new = function(self , table)
 		for k , v in pairs(table or {}) do
@@ -57,7 +34,7 @@ setmetatable(class , {
 })
 
 getter.new = function() return function(orig, ...)
-	local mt = copy( getmetatable(orig) , 2 )
+	local mt = table.copy( getmetatable(orig) )
 	local self = mt.__copy(orig)
 	mt.__new(self , ...)
 	setmetatable(self , mt)
@@ -112,6 +89,13 @@ getter.new = function() return function(orig, ...)
 		end,
 		__rawset = function(self,key,value)
 			return rawset(rawgetmetatable(self).__values,key,value)
+		end,
+		__tostring = function()
+			local mt = getmetatable(self)
+			if mt.__tostring then
+				return mt.__tostring(self)
+			end
+			return rawtostring(mt.__values)
 		end,
 		__unm = function(self)
 			local mt = getmetatable(self)
@@ -216,7 +200,5 @@ end end
 setter.new = function(self) return "value not setable" end
 
 class = class:new()
-
-package.preload["class"] = function() return class end
 
 return class

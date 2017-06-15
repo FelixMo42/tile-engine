@@ -79,6 +79,4 @@ ellement.textbox.draw.text = function(self)
 	love.graphics.printf(text,self.x,y,self.width,self.textMode or "center")
 end
 
-package.preload["ellement"] = function() return ellement end
-
 return ellement

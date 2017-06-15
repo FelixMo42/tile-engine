@@ -1,4 +1,4 @@
-local console = require("class"):new()
+local console = class:new()
 
 console.log = {}
 console.split = " "
@@ -55,7 +55,5 @@ function console:clear(reset)
 		end
 	end
 end
-
-package.preload["console"] = function() return console end
 
 return console

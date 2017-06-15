@@ -182,6 +182,12 @@ function player:getSkill(s,xp)
 	return self.skills[s]:getLevel()
 end
 
+local mt = getmetatable(player)
+
+mt.__tostring = function(self)
+	return self.mode.."s."..self.file..":new()"
+end
+
 npcs = {}
 players = {}
 

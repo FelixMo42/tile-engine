@@ -1,4 +1,4 @@
-local button = require("ui"):new({
+local button = ui:new({
 	width = 100, height = 20, b = 0,
 	bodyColor = {0,0,0},
 	lineColor = {255,255,255},
@@ -115,7 +115,5 @@ mt.__getter.height = function(self)
 	end
 	return rawget(self,"height") + (self.bd or self.bh or self.b) + (self.bu or 0)
 end
-
-package.preload["button"] = function() return button end
 
 return button

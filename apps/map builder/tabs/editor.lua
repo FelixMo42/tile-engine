@@ -127,7 +127,7 @@ editor.ui:add( ellement.menu:new({
 
 editor.ui.options:addChild( button:new({
 	text = "save", b_over = 0, bodyColor_over = color.grey,
-	func = function() filesystem.save( editor.map ) end
+	func = function() filesystem:saveClass( editor.map ) end
 }) , "save")
 
 --world

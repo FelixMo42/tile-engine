@@ -99,6 +99,4 @@ function ui.child:clear(new)
 	end
 end
 
-package.preload["ui"] = function() return ui end
-
 return ui

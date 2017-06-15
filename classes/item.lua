@@ -52,4 +52,10 @@ function item:damage()
 	return math.random(self.min,self.max)
 end
 
+local mt = getmetatable(item)
+
+mt.__tostring = function(self)
+	return "items."..self.file..":new()"
+end
+
 items = {}

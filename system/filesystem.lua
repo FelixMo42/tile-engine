@@ -1,140 +1,100 @@
 local filesystem = {}
-
-filesystem.base = ""
-filesystem.file = "/tile engine/"
-
-filesystem.getClassFile = function(data)
-	if _G[data.type.."_setting"] and _G[data.type.."_setting"].file then
-		return _G[data.type.."_setting"].file
-	end
-	return data.type.."s"
+ 
+--varibles
+ 
+filesystem.dir = "/"
+ 
+--local functions
+ 
+function filesystem:str(v)
+    if type(v) == "string" then
+        return "\""..tostring(v):gsub("\n","\\n"):gsub("\"","\\\"").."\""
+    end
+    return tostring(v)
 end
 
-filesystem.getIndex = function(dir)
-	local dir = filesystem.getDirectory(dir,".lua")
-	if #dir > 0 then
-		return tostring( tonumber( dir[#dir]:match("%d+") ) + 1 )
-	else
-		return "1"
-	end
+function filesystem:format(t,b,tables)
+    local s = (b or "return")
+    s = s.." {"
+    local tables = tables or {}
+    for k , v in pairs(t) do
+        if type(v) == "table" then
+            if not tables[v] then
+                tables[v] = #tables + 1
+                tables[#tables + 1] = v
+                s = self:format( v , "local T"..tables[v].." =" , tables).."\n"..s
+            end
+            s = s.."["..self:str(k).."] = ".."T"..tables[v]..", "
+        elseif type(v) ~= "function" then
+            s = s.."["..self:str(k).."] = "..self:str(v)..", "
+        end
+    end
+    return s.."}"
 end
-
-filesystem.toString = function(data)
-	if type(data) == "string" then
-		return ('"'..tostring(data)..'"'):gsub("\n", "\\n")
-	end
-	return tostring(data)
-end
-
-filesystem.keyToString = function(data)
-	if type(data) == "string" then
-		return ('["'..tostring(data)..'"]')
-	end
-	return "["..tostring(data).."]"
-end
-
-filesystem.classToString = function(data)
-	local s = data.type..":new({"
-	for key , value in pairs( data ) do
-		if data[key] ~= _G[data.type][key] then
-			if rawtype(value) == "table" then
-				if not table.empty( value ) then
-					if value.save then
-						s = s..filesystem.keyToString(key).." = "..value:save()..","
-					elseif value.new then
-						s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
-					else
-						s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
-					end
-				end
-			else
-				s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
-			end
-		end
-	end
-	return s:sub(1,-2).."})"
-end
-
-filesystem.tableToString = function(data)
-	local s = "{"
-	for key , value in pairs( data ) do
-		if rawtype(value) == "table" then
-			if not table.empty( value ) then
-				if value.save then
-					s = s..filesystem.keyToString(key).." = "..value:save()..","
-				elseif value.new then
-					s = s..filesystem.keyToString(key).." = "..filesystem.classToString(value)..","
-				else
-					s = s..filesystem.keyToString(key).." = "..filesystem.tableToString(value)..","
-				end
-			end
-		else
-			s = s..filesystem.keyToString(key).." = "..filesystem.toString(value)..","
-		end
-	end
-	return s:sub(1,-2).."}"
-end
-
-filesystem.save = function(data,dir)
-	if not data.file then
-		local fold = ( dir or filesystem.getClassFile(data) )
-		local dir = fold:sub(1,1)..filesystem.getIndex( fold )
-		data.file = dir
-	end
-	local t = "return "
-	if data.save then
-		t = t..data:save()
-	else
-		t = t..filesystem.classToString(data)
-	end
-	return filesystem.write( (dir or filesystem.getClassFile(data) ).."/"..data.file..".lua" , t )
-end
-
-filesystem.write = function(dir , data)
-	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file..filesystem.base
-	local f = io.open(path..dir, "w")
+ 
+function filesystem:write(file, data)
+	local path = self.dir..file
+	local f = io.open(path, "w")
 	f:write(data)
 	f:close()
 end
+ 
+function filesystem:get(file,mode)
+    local path = self.dir..file
+	local f = io.open(path, "r")
+	local t = f:read(mode or "*all")
+	f:close()
+	return t
+end
+ 
+function filesystem:load(file,...)
+    return assert(loadfile(self.dir..file))(...)
+end
 
-filesystem.getDirectory = function(dir,ext)
-	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file..filesystem.base
-	local i, t = 0, {}
-    local pfile = io.popen('ls -a "'..path..dir..'"')
+function filesystem:delet(file)
+    local path = (self.dir..file):gsub(" ","\\ ")
+	io.popen("rm "..path)
+end
+ 
+function filesystem:getDirectory(file,ext)
+	local path = (self.dir..file):gsub(" ","\\ ")
+	local i, t = 1, {}
+    local pfile = io.popen('ls -a '..path)
     for filename in pfile:lines() do
-    	if filename:sub(1,1) ~= "." then
-	    	if not ext or ext:find(ext) then
-		        i = i + 1
-		        t[i] = filename
-		    end
-		end
-    end
+        if filename:sub(1,1) ~= "." then
+            if not ext or filename:find(ext) then
+                t[i] = filename
+                i = i + 1
+            end
+        end
+	end
     pfile:close()
     return t
 end
-
-filesystem.loadClass = function(dir,ext)
-	ext = ext or ".lua"
-	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file..filesystem.base
-	local i , t , c = 0 , {} , _G[dir]
-    local pfile = io.popen('ls -a "'..path..dir..'"')
-    for filename in pfile:lines() do
-    	if filename:sub(1,1) ~= "." then
-	    	if not ext or ext:find(ext) then
-		        c[#c + 1] = dofile(path..dir.."/"..filename)
-		        c[ c[#c].name ] = c[#c]
-		        c[ c[#c].file ] = c[#c]
-		        c[ c[#c] ] = c[#c]
-		    end
-		end
+ 
+function filesystem:save(file,data)
+    --file
+    if type(file) == "function" then
+        file = file(file)
+    elseif type(file) == "function" then
+        return self:save(file.file,data)
     end
+    --data
+    data = data or file
+    local s = ""
+    if type(data) == "function" then
+        s = data(data)
+    elseif type(data) == "table" then
+        if s.save then
+            s = s:save()
+        else
+            s = self:format(data)
+        end
+    else
+        s = "return "..self:str(data)
+    end
+    self:write(file , s)
+    return s
 end
-
-filesystem.delet = function(dir)
-	local path = love.filesystem.getSourceBaseDirectory()..filesystem.file:gsub(" ","\\ ")..filesystem.base
-	io.popen("rm "..path..dir)
-end
-
-package.preload["filesystem"] = function() return filesystem end
 
 return filesystem

@@ -50,7 +50,7 @@ local function setup_skills()
 		menu.ui.skill.child.skills:addChild( button:new({
 			text = "save", y = i * 25 + 10, width = 50, s = s,
 			x = var:new( function() return screen.width - 55 end ),
-			func = function(self) filesystem.save( self.s ) end
+			func = function(self) filesystem:saveClass( self.s ) end
 		}) , "skill_"..i.."_save" )
 	end
 end
@@ -62,7 +62,7 @@ menu.ui.skill:addChild( button:new({
 	y = var:new( function() return screen.height - 25 end ), text = "new skill",
 	func = function()
 		local s = skill:new()
-		filesystem.save( s )
+		filesystem:saveClass( s )
 		skills[ s ] = s
 		skills[ s.file ] = s
 		skills[ #skills + 1 ] = s

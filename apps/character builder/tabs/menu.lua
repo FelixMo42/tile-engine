@@ -1,17 +1,3 @@
---set up
-
-ability.save = function(self) return "abilities."..self.file..":new()" end
-
-skill.save = function(self) return "skills."..self.file..":new()" end
-
-for k , v in pairs(abilities) do
-	v.save = ability.save
-end
-
-for k , v in pairs(skills) do
-	v.save = skill.save
-end
-
 --player
 
 menu.ui:add( ellement.menu:new({

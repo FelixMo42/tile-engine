@@ -11,7 +11,7 @@ npc_editor.ui:add( button:new({
 	x = var:new( function() return screen.width/2 + 5 end ),
 	y = var:new( function() return screen.height - 25 end ),
 	width = var:new( function() return screen.width/2 - 10 end ),
-	func = function(self) filesystem.save(npc_editor.player) end,
+	func = function(self) filesystem:saveClass(npc_editor.player) end,
 	text = "save"
 }) , "save" )
 

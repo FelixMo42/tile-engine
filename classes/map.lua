@@ -234,6 +234,10 @@ mt.__rawget = function(self , key)
 	end
 end
 
+mt.__tostring = function(self)
+	return "maps."..self.file..":new()"
+end
+
 maps = {}
 
 map_setting = {

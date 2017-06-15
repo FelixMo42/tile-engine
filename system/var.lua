@@ -1,4 +1,4 @@
-local var = require("class"):new({
+local var = class:new({
 	type = "number",
 	isvar = true
 })
@@ -50,6 +50,8 @@ mt.__le = function(self, outher)
 	return self.value(self.parent) >= outher
 end
 
-package.preload["var"] = function() return var end
+mt.__tostirng = function(self)
+	return tostring( self.value(self.parent) )
+end
 
 return var

@@ -10,7 +10,7 @@ object_editor.ui:add( button:new({
 	text = "save", x = var:new(function() return screen.width/2 + 5 end),
 	width = var:new(function() return screen.width/4 - 7.5 end),
 	y = var:new(function() return screen.height - 25 end), func = function()
-		filesystem.save( object_editor.object )
+		filesystem:saveClass( object_editor.object )
 	end
 }) , "save" )
 
