@@ -25,9 +25,15 @@ local function setup_skills()
 	for i , s in ipairs(skills) do
 		menu.ui.skill.child.skills:addChild( ellement.textbox:new({
 			startText = " ", text = s.name, y = i * 25 + 10, s = s, textMode = "left",
-			x = 5, width = var:new( function() return screen.width - 225 end ) ,
+			x = 5, width = var:new( function() return screen.width - 330 end ) ,
 			onEdit = function(self) self.s.name = self.text  end
 		}) , "skill_"..i.."_name" )
+
+		menu.ui.skill.child.skills:addChild( button:new({
+			text = "edit", y = i * 25 + 10, s = s,
+			x = var:new( function() return screen.width - 320 end ),
+			func = function(self) love.open( skill_editor , self.s )  end
+		}) , "skill_"..i.."_edit" )
 
 		menu.ui.skill.child.skills:addChild( ellement.textbox:new({
 			startText = "stat: ", text = s.stat, y = i * 25 + 10, s = s,

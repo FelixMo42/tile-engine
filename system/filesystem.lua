@@ -76,8 +76,6 @@ function filesystem:save(file,data)
     --file
     if type(file) == "function" then
         file = file(file)
-    elseif type(file) == "function" then
-        return self:save(file.file,data)
     end
     --data
     data = data or file

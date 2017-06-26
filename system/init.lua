@@ -46,7 +46,7 @@ filesystem.saveClass = function(self,data)
 			            if not tables[v] then
 			                tables[v] = #tables + 1
 			                tables[#tables + 1] = v
-			                s = self:format( v , "local T"..tables[v].." = " , tables).."\n"..s
+			                s = self:format( v , "local T"..tables[v].." =" , tables).."\n"..s
 			            end
 			            s = s.."["..self:str(k).."] = ".."T"..tables[v]..", "
 			        end

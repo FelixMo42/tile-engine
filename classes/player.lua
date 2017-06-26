@@ -6,22 +6,23 @@ player = class:new({
 	mode = "npc",
 	name = "def",
 	dialog = {text = "hello"},
+	level = 1, xp = 0,
+	ap = 0, sp = 0,
 	inventory = {},
-	states = {
+	stats = {
 		int = 0, wil = 0, chr = 0,
 		str = 0, con = 0, dex = 0,
 	},
-	actions = {
-		movement = 5, action = 1
-	},
+	actions = { movement = 5, action = 1 },
 	skills = {},
+	bonuses = {},
 	abilities = {}
 })
 
 function player:load(orig)
-	self.maxHp = self.maxHp or self.hp or (self.states.con+1)*25
+	self.maxHp = self.maxHp or self.hp or (self.stats.con+1)*25
 	self.hp = self.maxHp
-	self.maxMana = self.maxMana or self.mana or (self.states.wil+1)*25
+	self.maxMana = self.maxMana or self.mana or (self.stats.wil+1)*25
 	self.mana = self.maxMana
 	local a = self.abilities
 	self.abilities = {}
@@ -99,7 +100,7 @@ end
 
 function player:addAbility(a)
 	if (a.folder and self.abilities[a.folder] and self.abilities[a.folder][a.name]) or self.abilities[a.name] then
-		return
+		return false
 	end
 	a.player = self
 	if a.folder then
@@ -110,12 +111,14 @@ function player:addAbility(a)
 	else
 		self.abilities[a.name] = a
 	end
+	return true
 end
 
-function player:damage(a)
+function player:damage(a,p)
 	a = -math.max(a,0)
 	self.hp = self.hp + a
 	if self.hp <= 0 then
+		p:addXP(self.xp)
 		self.map:deletPlayer( self.x , self.y )
 		if game.initiative[self] then
 			game.initiative[self] = nil
@@ -131,10 +134,24 @@ function player:damage(a)
 	game.activate(self)
 end
 
+function player:bonus(t,a,d)
+	a , d = a or 10 , d or 10
+	self.bonuses[#self.bonuses + 1] = {t = t,a = a,d = d}
+	self.bonuses[t] = (self.bonuses[t] or 0) + a
+end
+
 function player:turn()
 	self.actions.action = 1
 	self.actions.movement = 5
 	for k , s in pairs(self.skills) do s:update() end
+	for i , v in ipairs(self.bonuses) do
+		v.d = v.d - 1
+		if v.d == 0 then
+			self.bonuses[v.t] = self.bonuses[v.t] - v.a
+			table.remove(self.bonuses , i)
+		end
+	end
+	--turn
 	if self.mode == "npc" then
 		self.path = {}
 		self:goTo( game.party.x , game.party.y , function(self)
@@ -179,7 +196,28 @@ function player:getSkill(s,xp)
 		end
 	end
 	self.skills[s]:addXP(xp)
-	return self.skills[s]:getLevel()
+	local level = self.skills[s]:getLevel()
+	for k in pairs(self.inventory) do
+		if type(k) == "string" and self.inventory[k].bonuses[s] then
+			level = level + self.inventory[k].bonuses[s]
+		end
+	end
+	level = level + (self.bonuses[s] or 0) + (self.bonuses[self.skills[s].stat] or 0)
+	return level
+end
+
+function player:addXP(xp)
+	self.xp = self.xp + xp
+	local r = 5 * 2 ^ self.level
+	while self.xp >= r do
+		self.xp = self.xp - r
+		self.level = self.level + 1
+		self.ap = self.ap + 1
+		self.sp = self.sp + 1
+		r = 5 * 2 ^ self.level
+		return true
+	end
+	return false
 end
 
 local mt = getmetatable(player)

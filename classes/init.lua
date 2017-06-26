@@ -6,8 +6,8 @@ require "classes/tile"
 require "classes/map"
 require "classes/player"
 
-filesystem:loadClass("skills")
 filesystem:loadClass("abilities")
+filesystem:loadClass("skills")
 filesystem:loadClass("items")
 filesystem:loadClass("npcs")
 filesystem:loadClass("players")

@@ -42,6 +42,30 @@ npc_editor.ui:add( button:new({
 	func = function(self) love.open( dialog ) end
 }) , "dialog" )
 
+npc_editor.ui:add( ellement.textbox:new({
+	x = 5, y = 105, startText = "level: ",
+	width = var:new( function() return screen.width/2 - 10 end ),
+	onEdit = function(self) npc_editor.player.level = tonumber(self.text) or 1 end
+}) , "level" )
+
+npc_editor.ui:add( ellement.textbox:new({
+	x = 5, y = 130, startText = "xp: ",
+	width = var:new( function() return screen.width/2 - 10 end ),
+	onEdit = function(self) npc_editor.player.xp = tonumber(self.text) or 0 end
+}) , "xp" )
+
+npc_editor.ui:add( ellement.textbox:new({
+	x = 5, y = 155, startText = "hp: ",
+	width = var:new( function() return screen.width/2 - 10 end ),
+	onEdit = function(self) npc_editor.player.maxHp = tonumber(self.text) end
+}) , "hp" )
+
+npc_editor.ui:add( ellement.textbox:new({
+	x = 5, y = 180, startText = "mana: ",
+	width = var:new( function() return screen.width/2 - 10 end ),
+	onEdit = function(self) npc_editor.player.maxMana = tonumber(self.text) end
+}) , "mana" )
+
 --functions
 
 function npc_editor.open(p)
@@ -51,6 +75,10 @@ function npc_editor.open(p)
 		npc_editor.ui.red.text = tostring(p.color[1])
 		npc_editor.ui.green.text = tostring(p.color[2])
 		npc_editor.ui.blue.text = tostring(p.color[3])
+		npc_editor.ui.level.text = tostring(p.level)
+		npc_editor.ui.xp.text = tostring(p.xp)
+		npc_editor.ui.hp.text = tostring(p.maxHp or p.hp)
+		npc_editor.ui.mana.text = tostring(p.maxMana or p.mana)
 	end
 end
 

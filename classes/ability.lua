@@ -1,14 +1,12 @@
 ability = class:new({
 	type = "ability",
 	cost = 0,
+	aim = 20,
 	range = 1,
+	level = 1,
 	moveType = "action",
 	moves = 1
 })
-
-function ability:save()
-	
-end
 
 local mt = getmetatable(ability)
 

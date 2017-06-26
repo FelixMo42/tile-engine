@@ -34,16 +34,16 @@ game.world:add( ellement.menu:new({
 	text = "moves", b_over = 0, bodyColor_over = color.grey
 }) , "move" )
 
-local function moves_setup(ui , abilities , x)
+game.moves_setup = function(ui , abilities , x)
 	ui.child:clear()
-	local y = 20
+	local y , x = 20 , x or 0
 	for k , v in pairs(abilities) do
 		if type(v) == "table" then
 			local t = ui:addChild( ellement.menu:new({
 				b_over = 0, bodyColor_over = color.grey,
 				x = x, y = y, text = k
 			}) )
-			moves_setup(t , v , x + 100)
+			game.moves_setup(t , v , x + 100)
 		else
 			ui:addChild( button:new({
 				b_over = 0, bodyColor_over = color.grey, a = v,
@@ -109,7 +109,7 @@ function game.open(map,player)
 	game.party = player
 	game.player = player
 	game.ability = game.party.abilities.tactical.move
-	moves_setup( game.world.move , player.abilities , 0 )
+	game.moves_setup( game.world.move , player.abilities )
 	--map
 	game.map = map
 	game.world.map = map

@@ -3,6 +3,7 @@ skill = class:new({
 	name = "def",
 	stat = "str",
 	bonuses = {},
+	abilities = {},
 	level = 0,
 	xp = 0
 })
@@ -18,16 +19,7 @@ function skill:addXP(xp)
 end
 
 function skill:getLevel(b)
-	local t = self.level + self.player.states[self.stat]
-	for k , v in ipairs(self.bonuses) do
-		t = t + v.a
-	end
-	for k , v in pairs(self.player.inventory) do
-		if type(k) == "string" then
-			t = t + (v.bonuses[self.name] or 0)
-		end
-	end
-	return t + (b or 0)
+	return self.level + self.player.states[self.stat] + (b or 0)
 end
 
 function skill:bonus(a,t)
