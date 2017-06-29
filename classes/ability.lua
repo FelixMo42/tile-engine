@@ -8,6 +8,25 @@ ability = class:new({
 	moves = 1
 })
 
+function ability:available(p)
+	p = p or self.player
+	if self.requirements then
+		if p.skills[self.requirements.skill] then
+			return self.requirements.level >= p.skills[self.requirements.skill]
+		end
+		return false
+	end
+	return true
+end
+
+function ability:gotten(p)
+	p = p or self.player
+	if self.folder and p.abilities[self.folder] then
+		return p.abilities[self.folder][self.name]
+	end
+	return p.abilities[self.name]
+end
+
 local mt = getmetatable(ability)
 
 mt.__call = function(self,x,y)

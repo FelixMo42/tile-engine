@@ -65,18 +65,18 @@ function map:resize(w,h)
 	self:setScale(map_setting.scale)
 end
 
+function map:move(dx,dy)
+	if love.mouse.isDown(2, 3) then
+		self:setPos(self.x-(dx/map_setting.scale) , self.y-(dy/map_setting.scale))
+	end
+end
+
 function map:setScale(s)
 	local minZoom = math.max(screen.height / self.height , screen.width / self.width , map_setting.minZoom )
 	local maxZoom = math.min(screen.height , screen.width , map_setting.maxZoom)
 	s = math.clamp(s,minZoom,maxZoom)
 	self:setPos(self.x+((screen.width/map_setting.scale)-(screen.width/s))/2 ,  self.y+((screen.width/map_setting.scale)-(screen.width/s))/2)
 	map_setting.scale = s
-end
-
-function map:move(dx,dy)
-	if love.mouse.isDown(2, 3) then
-		self:setPos(self.x-(dx/map_setting.scale) , self.y-(dy/map_setting.scale))
-	end
 end
 
 function map:setPos(x,y)
@@ -135,6 +135,16 @@ function map:setPlayer(p,sx,sy,ex,ey)
 	end
 end
 
+function map:addPlayer(p)
+	p = p or player:new()
+	self.players[p] = p
+	p.map = self
+	p.tile = self[p.x][p.y]
+	self.playerMap[p.x][p.y] = p
+	self[p.x][p.y].player = p
+	return p
+end
+
 function map:deletPlayer(sx,sy,ex,ey)
 	ex , ey = ex or sx , ey or sy
 	for x = sx , ex , math.sign(ex - sx) == 0 and 1 or math.sign(ex - sx) do
@@ -170,31 +180,6 @@ function map:deletItem(sx,sy,ex,ey)
 	end
 end
 
-function map:addPlayer(p)
-	p = p or player:new()
-	self.players[p] = p
-	p.map = self
-	p.tile = self[p.x][p.y]
-	self.playerMap[p.x][p.y] = p
-	self[p.x][p.y].player = p
-	return p
-end
-
-function map:saveTile(x,y,s)
-	if self[x][y].file then
-		s = "tiles."..self[x][y].file..":new({"
-	else
-		s = "tile:new({"
-	end
-	if self[x][y].item then
-		s = s.."item = items."..self[x][y].item.file..","
-	end
-	if self[x][y].object then
-		s = s.."object = objects."..self[x][y].object.file
-	end
-	return s.."}),"
-end
-
 function map:save()
 	local s = "map:new({"
 	for k , v in pairs(self) do
@@ -210,7 +195,7 @@ function map:save()
 		s = s.."{"
 		for y = 1 , self.height do
 			if self[x][y].file or self[x][y].item or self[x][y].object then
-				s = s.."["..y.."] = "..self:saveTile(x,y)
+				s = s.."["..y.."] = "..tostring(self[x][y])..","
 			end
 		end
 		s = s.."},\n"

@@ -7,5 +7,6 @@ color.green = {0,255,0}
 color.blue = {0,0,255}
 color.red = {255,0,0}
 color.brown = {128,0,0}
+color.yellow = {255,255,0}
 
 return color

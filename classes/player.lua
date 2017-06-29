@@ -99,10 +99,8 @@ function player:getActions()
 end
 
 function player:addAbility(a)
-	if (a.folder and self.abilities[a.folder] and self.abilities[a.folder][a.name]) or self.abilities[a.name] then
-		return false
-	end
 	a.player = self
+	if a:gotten() then return false end
 	if a.folder then
 		if not self.abilities[a.folder] then
 			self.abilities[a.folder] = {}

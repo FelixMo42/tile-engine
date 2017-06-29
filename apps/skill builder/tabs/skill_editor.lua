@@ -25,7 +25,8 @@ function skill_editor.open(s)
 end
 
 function skill_editor.set_abilities()
-	for i , v in pairs( skill_editor.skill.abilities ) do
+	skill_editor.ui.abilities.child:clear()
+	for i , v in ipairs( skill_editor.skill.abilities ) do
 		skill_editor.ui.abilities:addChild( ellement.textbox:new({
 			i = i, x = 5, y = i * 25 - 20, text = v.name,
 			width = var:new(function() return screen.width - 115 end),
@@ -37,7 +38,7 @@ function skill_editor.set_abilities()
 		}) )
 		skill_editor.ui.abilities:addChild( button:new({
 			i = i, x = var:new(function() return screen.width - 105 end), y = i * 25 - 20,
-			text = "delete", width = 100, onEdit = function(self)
+			text = "delete", width = 100, func = function(self)
 				table.remove(skill_editor.skill.abilities , self.i)
 				skill_editor.set_abilities()
 			end

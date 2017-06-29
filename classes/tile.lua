@@ -84,7 +84,18 @@ end
 local mt = getmetatable(tile)
 
 mt.__tostring = function(self)
-	return "tiles."..self.file..":new()"
+	if self.file then
+		s = "tiles."..self.file..":new({"
+	else
+		s = "tile:new({"
+	end
+	if self.item then
+		s = s.."item = "..tostring(self.item)..","
+	end
+	if self.object then
+		s = s.."object = "..tostring(self.object)
+	end
+	return s.."})"
 end
 
 tiles = {}

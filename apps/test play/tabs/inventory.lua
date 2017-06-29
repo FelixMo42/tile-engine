@@ -75,26 +75,39 @@ end
 
 function setUpSkills()
 	inventory.ui.skills.child:clear()
-	local i = 1
-	for k , s in ipairs( inventory.player.skills ) do
-		local ui = inventory.ui.skills:addChild( button:new({
+	for i , s in ipairs( inventory.player.skills ) do
+		local skill_ui = inventory.ui.skills:addChild( ellement.menu:new({
 			text = s.name.." - lv "..s.level.." + "..inventory.player:getSkill(s.name)-s.level.." - xp "..s.xp,
-			x = 25, y = i * 25 + 20, width = 200
+			x = 25, y = (i-1) * 25 + 75, width = 200
 		}) , s.name )
 		for i , a in ipairs( s.abilities ) do
-			inventory.ui.skills.child[s.name]:addChild( button:new({
-				x = 235, y = i * 25 + 20, text = a.name, ability = a, func = function(self)
-					if inventory.player.ap > 0 then
+			local c = skill_ui:addChild( button:new({
+				x = 235, y = (i-1) * 25 + 75, text = a.name, ability = a, func = function(self)
+					if self.ability:available() and inventory.player.ap > 0 then
 						inventory.player.ap = inventory.player.ap - 1
 						inventory.player:addAbility( self.ability )
 						game.moves_setup( game.world.move , inventory.player.abilities )
+						setUpSkills()
 					end
 				end
 			}) )
+			if a:gotten(inventory.player) then
+				c.bodyColor = color.blue
+			elseif a:available(inventory.player) then
+				c.bodyColor = color.black
+			else
+				c.bodyColor = color.grey
+			end
 		end
-		i = i + 1
 	end
 	inventory.ui.skills:addChild(button:new({x = 20,y = 40,width = 1000,height = 1000,draw = function()
-		love.graphics.line(230,45 , 230,screen.height-25)
+		love.graphics.line(25,70 , screen.width-25,70)
+		love.graphics.line(230,75 , 230,screen.height-25)
+		local text = "name: "..inventory.player.name.." / "
+		text = text.."level: "..inventory.player.level.." / ".."xp: "..inventory.player.xp.." / "
+		text = text.."hp: "..inventory.player.hp.." / ".."mana: "..inventory.player.mana.." / "
+		text = text.."ap: "..inventory.player.ap.." / ".."sp: "..inventory.player.sp.."\n"
+		for k , v in pairs(inventory.player.stats) do text = text..k..": "..v.." / " end
+		love.graphics.prints(text, 25 , 40 , screen.height - 50, 30, "center")
 	end}),"bg")
 end
