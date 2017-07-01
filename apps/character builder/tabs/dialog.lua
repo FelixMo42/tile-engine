@@ -34,7 +34,7 @@ dialog.ui:add( button:new({
 	x = var:new(function() return screen.width / 2 + 2.5 end ),
 	y = var:new(function() return screen.height - 25 end ), text = "back",
 	width = var:new(function() return screen.width / 2 - 7.5 end),
-	func = function() dialog.choose( dialog.prev ) end
+	func = function() if dialog.prev then dialog.choose( dialog.prev ) end end
 }) , "back" )
 
 --functions

@@ -81,15 +81,8 @@ function player:goTo(x,y,f)
 end
 
 function player:setPos(x,y)
-	self.map[self.tile.x][self.tile.y].player = nil
-	self.map.playerMap[self.tile.x][self.tile.y] = nil
-	self.map[x][y].player = self
 	self.x , self.y = x , y
-	self.tile = self.map[x][y]
-	self.map.playerMap[x][y] = self
-	if self.tile.item then
-		self.tile.item:pickUp( self )
-	end
+	self.map[x][y]:setPlayer( self )
 end
 
 function player:getActions()
@@ -221,7 +214,9 @@ end
 local mt = getmetatable(player)
 
 mt.__tostring = function(self)
-	return self.mode.."s."..self.file..":new()"
+	local s = self.mode.."s."..self.file..":new({"
+	s = s.."x = "..self.x..", y = "..self.y
+	return s.."})"
 end
 
 npcs = {}

@@ -20,12 +20,18 @@ editor.ui.tile:addChild( ellement.menu:new({
 
 for i , t in ipairs( tiles ) do
 	editor.ui.tile.child.tiles:addChild( button:new({
-		text = t.name, tile = t, y = 20 * i, func = function(self)
+		text = t.name, tile = t, y = 20 * i, b_over = 0,
+		bodyColor_over = color.grey, func = function(self)
 			editor.ui.tile.child.tiles.text = self.tile.name
 			editor.selected = self.tile
 		end
 	}) )
 end
+
+editor.ui.tile:addChild( button:new({
+	text = "edit tile", b_over = 0, bodyColor_over = color.grey, x = 100,
+	func = function() editor.selected = "edit" end
+}) , "edit" )
 
 --object
 
@@ -43,7 +49,8 @@ editor.ui.object:addChild( ellement.menu:new({
 
 for i , o in ipairs( objects ) do
 	editor.ui.object.child.objects:addChild( button:new({
-		text = o.name, object = o, y = 20 * i, func = function(self)
+		text = o.name, object = o, y = 20 * i, b_over = 0,
+		bodyColor_over = color.grey, func = function(self)
 			editor.ui.object.child.objects.text = self.object.name
 			editor.selected = self.object
 		end
@@ -134,7 +141,9 @@ editor.ui.options:addChild( button:new({
 
 local function onClick()
 	if editor.mode == "tile" then
-		if editor.selected then
+		if editor.selected == "edit" then
+			love.open( tile_editor , editor.map[mouse.tile.sx][mouse.tile.sy] )
+		elseif editor.selected then
 			editor.map:setTile(editor.selected,mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		end
 	elseif editor.mode == "object" then
@@ -151,8 +160,7 @@ local function onClick()
 		end
 	elseif editor.mode == "players" then
 		if editor.selected == "spawn" then
-			editor.map.spawn.x = mouse.tile.sx
-			editor.map.spawn.y = mouse.tile.sy
+			editor.map.spawn.x , editor.map.spawn.y = mouse.tile.sx , mouse.tile.sy
 		elseif editor.selected == "delet" then
 			editor.map:deletPlayer(mouse.tile.sx,mouse.tile.sy,mouse.tile.ex,mouse.tile.ey)
 		elseif editor.selected then
@@ -187,12 +195,13 @@ function editor.reset(name)
 end
 
 function editor.open(map)
+	if not map then return end
 	editor.map = map
 	editor.world.map = map
 	editor.world[1] = map
 end
 
-function editor.draw( ... )
+function editor.draw()
 	love.graphics.setColor(0,0,255,100)
 	local s = map_setting.scale
 	if mouse.button == 1 then

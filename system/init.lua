@@ -54,7 +54,7 @@ filesystem.saveClass = function(self,data)
 		            s = s.."["..self:str(k).."] = "..self:str(v)..", "
 		        end
 		 	end
-		 	s = s...."})"
+		 	s = s.."})"
 	    end
 	end
 	self:write(f.."/"..data.file..".lua" , s)

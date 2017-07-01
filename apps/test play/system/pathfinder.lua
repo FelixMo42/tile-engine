@@ -103,8 +103,4 @@ function pathfinder:line(map , sx,sy , ex,ey , e)
 	return open , steps
 end
 
-class = require "system/class"
-
-package.preload["pathfinder"] = function() return pathfinder end
-
 return pathfinder

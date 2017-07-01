@@ -101,8 +101,6 @@ end }) , "player info")
 function game.open(map,player)
 	if not map then return end
 	--player
-	local map = menu.map
-	local player = menu.player
 	player.x = map.spawn.x
 	player.y = map.spawn.y
 	game.activate( player )

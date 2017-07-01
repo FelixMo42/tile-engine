@@ -5,12 +5,8 @@ tile = class:new({
 })
 
 function tile:load()
-	if self.object then
-		self:setObject(self.object:new())
-	end
-	if self.item then
-		self:setItem(self.item:new())
-	end
+	if self.object then self:setObject(self.object:new()) end
+	if self.item then self:setItem(self.item:new()) end
 end
 
 function tile:draw(x,y,s)
@@ -81,6 +77,16 @@ function tile:getActions()
 	return actions
 end
 
+function tile:setPlayer(player)
+	self.player = player
+	self.map.playerMap[player.tile.x][player.tile.y] = nil
+	player.tile.player = nil
+	player.tile = self
+	self.map.playerMap[self.x][self.y] = player
+	if self.item then self.item:pickUp( player ) end
+	if self.spawn then love.open( game , maps[self.spawn], player ) end
+end
+
 local mt = getmetatable(tile)
 
 mt.__tostring = function(self)
@@ -89,12 +95,10 @@ mt.__tostring = function(self)
 	else
 		s = "tile:new({"
 	end
-	if self.item then
-		s = s.."item = "..tostring(self.item)..","
-	end
-	if self.object then
-		s = s.."object = "..tostring(self.object)
-	end
+	if self.item then s = s.."item = "..tostring(self.item)..", " end
+	if self.object then s = s.."object = "..tostring(self.object)..", " end
+	if self.player then s = s.."player = "..tostring(self.player)..", " end
+	if self.spawn then s = s.."spawn = "..maps[self.spawn].file end
 	return s.."})"
 end
 

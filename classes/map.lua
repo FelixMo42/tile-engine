@@ -10,6 +10,10 @@ map = class:new({
 function map:load()
 	--setup
 	self:setScale( map_setting.scale )
+	--player map
+	for x = 1 , self.width do
+		self.playerMap[x] = {}
+	end
 	--tiles
 	for x = 1 , self.width do
 		self[x] = self[x] or {}
@@ -17,19 +21,10 @@ function map:load()
 			self[x][y] = self[x][y] or (self.defTile or tile):new()
 			self[x][y].x , self[x][y].y = x , y
 			self[x][y].map = self
+			if self[x][y].player then
+				self:addPlayer( self[x][y].player )
+			end
 		end
-	end
-	--player map
-	for x = 1 , self.width do
-		self.playerMap[x] = self.playerMap[x] or {}
-	end
-	for k , p in ipairs(self.players) do
-		self[p.x][p.y].player = p
-		p.map = self
-		p.tile = self[p.x][p.y]
-		self.playerMap[p.x][p.y] = p
-		self.players[p] = p
-		self.players[k] = nil
 	end
 end
 
@@ -192,19 +187,12 @@ function map:save()
 		end
 	end
 	for x = 1 , self.width do
-		s = s.."{"
+		s = s.."\n{"
 		for y = 1 , self.height do
-			if self[x][y].file or self[x][y].item or self[x][y].object then
-				s = s.."["..y.."] = "..tostring(self[x][y])..","
-			end
+			s = s..tostring(self[x][y])..","
 		end
 		s = s.."},\n"
 	end
-	s = s.."players = {"
-	for k , p in pairs(self.players) do
-		s = s.."npcs."..p.file..":new({x = "..p.x..",y = "..p.y.."}),"
-	end
-	s = s.."},\n"
 	s = s.."spawn = {x = "..self.spawn.x..",y = "..self.spawn.y.."}"
 	return s.."})"
 end
@@ -220,7 +208,7 @@ mt.__rawget = function(self , key)
 end
 
 mt.__tostring = function(self)
-	return "maps."..self.file..":new()"
+	return "maps."..self.file
 end
 
 maps = {}
