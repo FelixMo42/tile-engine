@@ -19,7 +19,11 @@ filesystem = require "system/filesystem"
 
 --filesystem set up
 
-filesystem.dir = love.filesystem.getSourceBaseDirectory().."/tile engine/save/"
+if love.filesystem.getSource():find(".love") then
+	filesystem.dir = love.filesystem.getSourceBaseDirectory().."/data/"
+else
+	filesystem.dir = love.filesystem.getSource().."/save/"
+end
 
 filesystem.saveClass = function(self,data)
 	--file

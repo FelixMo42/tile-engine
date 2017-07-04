@@ -155,7 +155,7 @@ end
 --love
 
 function love.graphics.prints(t,x,y,w,h,xa,ya)
-	ya = ya or "center"
+	ya , t = ya or "center" , t..""
 	if ya == "center" then
 		local l = #( ( {love.graphics.getFont():getWrap(t,w)} )[2] )
 		y = y + h / 2 -  (l * love.graphics.getFont():getHeight())/2

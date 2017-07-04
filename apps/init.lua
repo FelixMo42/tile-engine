@@ -54,3 +54,7 @@ function console:enter(text)
 		end
 	end
 end
+
+if filesystem:get("setting/build") then
+	console:enter(filesystem:get("setting/build"))
+end

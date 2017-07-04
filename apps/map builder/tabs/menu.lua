@@ -1,8 +1,8 @@
 menu.map = {width = 100 , height = 100}
 
---new map
-
 menu.ui:add( ui:new() , "maps" )
+
+--open maps
 
 local function map_setup()
 	menu.ui.maps.child = {active = true}
@@ -29,6 +29,8 @@ local function map_setup()
 end
 
 map_setup()
+
+--new map
 
 menu.ui:add( ellement.menu:new({
 	text = "new map", x = 5,

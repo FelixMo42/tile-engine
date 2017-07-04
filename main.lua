@@ -5,7 +5,7 @@ screen = {
 
 mouse = {
 	x = love.mouse.getX(), y = love.mouse.getY(),
-	dx = 0, dy = 0, sx = 0, sy = 0,
+	dx = 0, dy = 0, sx = 0, sy = 0, ex = 0, ey = 0,
 	button = 0,
 	drag = false,
 	used = false
@@ -33,6 +33,11 @@ function love.open(t,...)
 		tab = tabs[t]
 		tab:dofunc("open",...)
 	end
+end
+
+function love.load(...)
+	tab:dofunc("load",...)
+	tab:dofunc("open")
 end
 
 function love.draw(...)

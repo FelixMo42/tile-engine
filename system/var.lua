@@ -5,9 +5,15 @@ local var = class:new({
 
 mt = getmetatable(var)
 
-mt.__new = function(self, func, parent)
+mt.__new = function(self, func, parent, t)
+	if type(parent) == "string" then
+		tmp = t
+		t = parent
+		parent = tmp
+	end
 	self.value = func
 	self.parent = parent or self
+	self.type = t
 end
 
 mt.__add = function(self, outher)
@@ -35,7 +41,7 @@ mt.__mod = function(self, outher)
 end
 
 mt.__concat = function(self, outher)
-	return self.value(self.parent) .. outher
+	return self.value(self.parent)..outher
 end
 
 mt.__eq = function(self, outher)
